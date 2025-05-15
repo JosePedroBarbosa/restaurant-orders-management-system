@@ -78,7 +78,7 @@ FlavorFlow is a web-based application that provides an integrated order manageme
 3. **Backend setup**
 
    ```bash
-   cd backend
+   cd backoffice
    npm install
    npm start   
    ```
@@ -88,7 +88,7 @@ FlavorFlow is a web-based application that provides an integrated order manageme
 4. **Frontend setup**
 
    ```bash
-   cd frontend/paw-restaurant
+   cd frontoffice/paw-restaurant
    npm install
    npm start
    ```
