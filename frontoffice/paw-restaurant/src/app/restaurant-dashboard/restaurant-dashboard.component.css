@@ -1,0 +1,193 @@
+/* restaurant-dashboard.component.css */
+
+.container {
+  margin-top: 2rem;
+}
+
+.alert-message {
+  margin-bottom: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  position: relative;
+  font-weight: 500;
+}
+
+.alert-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-message .close-btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: inherit;
+  cursor: pointer;
+}
+
+.form-container {
+  background-color: var(--card-bg, #fff);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 50px;
+}
+
+.form-header {
+  background: linear-gradient(
+    to right,
+    var(--primary-color, #ff5722),
+    var(--primary-dark, #e64a19)
+  );
+  color: white;
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-body {
+  padding: 30px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  color: var(--primary-dark, #e64a19);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.section-icon {
+  margin-right: 10px;
+  background-color: var(--primary-light, #ff8a65);
+  color: white;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color, #ff5722);
+  box-shadow: 0 0 0 0.2rem rgba(255, 127, 80, 0.25);
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: #e0e0e0;
+}
+
+textarea.form-control {
+  min-height: 120px;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    to right,
+    var(--primary-color, #ff5722),
+    var(--primary-dark, #e64a19)
+  );
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(255, 69, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(
+    to right,
+    var(--primary-dark, #e64a19),
+    var(--primary-color, #ff5722)
+  );
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 69, 0, 0.3);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.help-text {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .form-body {
+    padding: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .actions .btn {
+    width: 100%;
+  }
+
+  .form-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.empty-dashboard-card {
+  border: 2px dotted #ffc107;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  padding: 2rem 3rem;
+  max-width: 600px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+    --primary-color: #ff7f50;
+    --primary-dark: #ff4500;
+    --primary-light: #ffa07a;
+    --bg-color: #fff8f0;
+    --text-color: #333;
+    --card-bg: #ffffff;
+    --accent-color: #ff6347;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-size: cover;
+    background-attachment: fixed;
+    background-blend-mode: overlay;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}

@@ -1,0 +1,100 @@
+<div class="container mt-4">
+  <div class="cart-header">
+    <h1 class="cart-title"><i class="bi bi-receipt me-2"></i>Order Details</h1>
+    <p class="cart-subtitle">Track the status and details of this order</p>
+    <div
+      class="alert alert-secondary d-inline-flex align-items-center gap-2 px-3 py-2 mt-2"
+    >
+      <i class="bi bi-upc-scan fs-5"></i>
+      <strong>Order ID:</strong> {{ order.orderCode }}
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && order">
+    <!-- Status Section -->
+    <div class="order-status mb-4 p-4 bg-light rounded shadow-sm">
+      <h4 class="mb-2">
+        <i class="bi bi-info-circle me-2"></i>Status:
+         <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+          {{ getReadableStatus(order.status) }}
+        </span>
+      </h4>
+      <p class="text-muted mb-0">
+        Placed on: {{ order.createdAt | date : "medium" }}
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left Column -->
+      <div class="col-md-8">
+        <!-- Delivery Info -->
+        <div class="cart-section">
+          <h2 class="section-title">
+            <i class="bi bi-truck me-2"></i>Payment & Delivery Information
+          </h2>
+          <p><strong>Type:</strong> {{ order.deliveryType | titlecase }}</p>
+          <p>
+            <strong>Address:</strong> {{ order.deliveryDetails?.street }},
+            {{ order.deliveryDetails?.city }}
+            {{ order.deliveryDetails?.postalCode }}
+          </p>
+          <p>
+            <strong>Payment Method:</strong>
+            {{ order.paymentMethod | titlecase }}
+          </p>
+          <p>
+            <strong>Payment Status:</strong>
+            {{ order.paymentStatus | titlecase }}
+          </p>
+          <p>
+            <strong>Citizen Card Number:</strong>
+            {{ order.citizenCardNumber }}
+          </p>
+          <div
+            class="alert alert-info d-flex align-items-start gap-2"
+            *ngIf="order.customerNote"
+          >
+            <i class="bi bi-chat-left-text-fill fs-4"></i>
+            <div>
+              <strong>Customer Notes</strong>
+              <p class="mb-0 text-break">{{ order.customerNote }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ordered Items -->
+        <div class="cart-section">
+          <h2 class="section-title">
+            <i class="bi bi-bag-check me-2"></i>Ordered Items
+          </h2>
+          <div *ngFor="let item of order.orderItems" class="cart-item">
+            <div class="cart-item-details">
+              <h5 class="mb-1">{{ item.menuItem?.name }}</h5>
+              <p class="text-muted mb-0">Portion: {{ item.portionName }}</p>
+              <p class="mb-0">Quantity: {{ item.quantity }}</p>
+              <p class="mb-0">€ {{ item.portionPrice.toFixed(2) }} each</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 align-self-start">
+        <div class="cart-summary">
+          <h2 class="section-title">
+            <i class="bi bi-wallet2 me-2"></i>Order Summary
+          </h2>
+          <div class="summary-total">
+            <span class="total-label">Total Paid</span>
+            <span class="total-value">€ {{ order.totalPrice.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

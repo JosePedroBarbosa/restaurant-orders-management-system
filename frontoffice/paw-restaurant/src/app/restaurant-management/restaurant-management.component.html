@@ -1,0 +1,331 @@
+<div class="container mt-5">
+  <!-- Formulário de Atualização -->
+  <div class="form-container">
+    <div class="form-header">
+      <h4 class="mb-0">Update Restaurant Informations</h4>
+    </div>
+
+    <form
+      (ngSubmit)="onSubmit()"
+      [formGroup]="restaurantForm"
+      enctype="multipart/form-data"
+    >
+      <div class="form-body">
+        <!-- Basic Informations -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <span class="section-icon"><i class="bi bi-shop"></i></span>
+            Basic Informations
+          </h5>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label for="name" class="form-label">Restaurant Name</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-card-heading"></i
+                ></span>
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control"
+                  formControlName="name"
+                  placeholder="Your restaurant name"
+                  required
+                />
+              </div>
+              <div class="help-text">
+                This name will be public for the customers.
+              </div>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                id="description"
+                class="form-control"
+                formControlName="description"
+                rows="4"
+                placeholder="Describe your restaurant"
+                required
+              ></textarea>
+              <div class="help-text">
+                A good description can help bring more clients!
+              </div>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label for="image" class="form-label"
+                >Change Restaurant Image</label
+              >
+              <input
+                type="file"
+                id="image"
+                class="form-control"
+                (change)="onFileSelected($event)"
+                accept="image/*"
+              />
+              <div class="help-text">
+                Upload an image of your restaurant (JPG, PNG, or GIF).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <span class="section-icon"><i class="bi bi-geo-alt"></i></span>
+            Address
+          </h5>
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="street" class="form-label">Street</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-signpost"></i
+                ></span>
+                <input
+                  type="text"
+                  id="street"
+                  class="form-control"
+                  formControlName="street"
+                  placeholder="Your restaurant street"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="city" class="form-label">City</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-building"></i
+                ></span>
+                <input
+                  type="text"
+                  id="city"
+                  class="form-control"
+                  formControlName="city"
+                  placeholder="Your restaurant city"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="postalCode" class="form-label">Postal Code</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-mailbox"></i
+                ></span>
+                <input
+                  type="text"
+                  id="postalCode"
+                  class="form-control"
+                  formControlName="postalCode"
+                  placeholder="Your restaurant postal code"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Informations -->
+        <div class="form-section">
+          <h5 class="section-title">
+            <span class="section-icon"><i class="bi bi-truck"></i></span>
+            Delivery Informations
+          </h5>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="preparationTime" class="form-label"
+                >Preparation Time (minutes)</label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-hourglass-split"></i
+                ></span>
+                <input
+                  type="number"
+                  id="preparationTime"
+                  class="form-control"
+                  formControlName="preparationTime"
+                  min="1"
+                  placeholder="Preparation time"
+                  required
+                />
+              </div>
+              <div class="help-text">Average preparation time.</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="deliveryTime" class="form-label"
+                >Delivery Time (minutes)</label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-bicycle"></i
+                ></span>
+                <input
+                  type="number"
+                  id="deliveryTime"
+                  class="form-control"
+                  formControlName="deliveryTime"
+                  min="1"
+                  placeholder="Delivery time"
+                  required
+                />
+              </div>
+              <div class="help-text">Average delivery time.</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="maxDeliveryRadius" class="form-label"
+                >Max Delivery Radius (km)</label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-geo-fill"></i
+                ></span>
+                <input
+                  type="number"
+                  id="maxDeliveryRadius"
+                  class="form-control"
+                  formControlName="maxDeliveryRadius"
+                  min="0.1"
+                  step="0.1"
+                  placeholder="Max delivery radius"
+                  required
+                />
+              </div>
+              <div class="help-text">Max delivery radius in kilometers.</div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="maxOrdersPerHour" class="form-label"
+                >Max Orders per Hour</label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-calendar-check"></i
+                ></span>
+                <input
+                  type="number"
+                  id="maxOrdersPerHour"
+                  class="form-control"
+                  formControlName="maxOrdersPerHour"
+                  min="1"
+                  placeholder="Max orders per hour"
+                  required
+                />
+              </div>
+              <div class="help-text">
+                Maximum orders your restaurant can handle per hour.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="restaurantForm.invalid"
+          >
+            Apply Changes
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de Menus -->
+  <div class="form-container mt-5">
+    <div class="form-header">
+      <h4 class="mb-0">Manage Restaurant Menus</h4>
+    </div>
+
+    <div class="table-responsive">
+      <table
+        class="table table-bordered table-hover table-striped align-middle"
+      >
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="menus?.length === 0">
+            <td colspan="3" class="text-center">
+              <i class="bi bi-exclamation-circle me-2"></i> No menus registered.
+            </td>
+          </tr>
+          <tr *ngFor="let menu of menus">
+            <td>{{ menu.name }}</td>
+            <td>{{ menu.description }}</td>
+            <td>
+              <div class="d-flex flex-wrap gap-2">
+                <button
+                  class="btn btn-danger btn-sm w-80 w-md-auto"
+                  (click)="deleteMenu(restaurantId, menu._id)"
+                >
+                  <i class="bi bi-trash me-1"></i> Remove
+                </button>
+                <a
+                  [routerLink]="['/restaurants/menu/edit', menu._id]"
+                  class="btn btn-warning btn-sm"
+                >
+                  <i class="bi bi-pencil me-1"></i> Edit Menu
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Lista de Menu Items -->
+<div class="form-container mt-5">
+  <div class="form-header">
+    <h4 class="mb-0">Manage Restaurant Menu Items</h4>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="menuItems?.length === 0">
+          <td colspan="3" class="text-center">
+            <i class="bi bi-exclamation-circle me-2"></i> No menu items found.
+          </td>
+        </tr>
+        <tr *ngFor="let item of menuItems">
+          <td>{{ item.name }}</td>
+          <td>{{ item.description }}</td>
+          <td>
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-danger btn-sm w-80 w-md-auto" (click)="deleteMenuItem(item._id)">
+                <i class="bi bi-trash me-1"></i> Remove
+              </button>
+              <a [routerLink]="['/restaurants/menuItem/edit', item._id]" class="btn btn-warning btn-sm">
+                <i class="bi bi-pencil me-1"></i> Edit
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>

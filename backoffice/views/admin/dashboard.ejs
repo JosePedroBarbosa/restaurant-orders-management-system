@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Dashboard - FlavorFlow</title>
+    <link rel="icon" type="image/x-icon" href="/images/icon/icon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css"
+    />
+    <style>
+      .dashboard-container {
+        margin: 40px auto 60px;
+        padding: 0;
+        position: relative;
+      }
+
+      .card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin-bottom: 30px;
+        border: none;
+      }
+
+      .card-header {
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        color: white;
+        padding: 20px 30px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+
+      .card-body {
+        padding: 30px;
+      }
+
+      .section-title {
+        color: var(--primary-dark);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .subsection-title {
+        color: var(--primary-dark);
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 30px 0 20px;
+        display: flex;
+        align-items: center;
+      }
+
+      .section-icon {
+        margin-right: 15px;
+        background-color: var(--primary-light);
+        color: white;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.2rem;
+      }
+
+      .table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .table thead th {
+        background-color: #f8f9fa;
+        border-color: #eee;
+        color: #555;
+        font-weight: 600;
+        padding: 15px;
+      }
+
+      .table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+        border-color: #eee;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        color: white;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(255, 69, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(
+          to right,
+          var(--primary-dark),
+          var(--primary-color)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(255, 69, 0, 0.3);
+      }
+
+      .btn-danger {
+        background: linear-gradient(to right, #dc3545, #b02a37);
+        border: none;
+        padding: 4px 10px;
+        border-radius: 30px;
+        font-weight: 600;
+        color: white;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .btn-danger:hover {
+        background: linear-gradient(to right, #bb2d3b, #dc3545);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+      }
+
+      .btn-warning {
+        background: linear-gradient(to right, #a1a3079c, #b5c203);
+        border: none;
+        padding: 4px 10px;
+        border-radius: 30px;
+        font-weight: 600;
+        color: white;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .btn-warning:hover {
+        color: white;
+        background: linear-gradient(to right, #acc606, #d2e004);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(190, 199, 23, 0.3);
+      }
+
+      hr {
+        height: 1px;
+        background-color: #eee;
+        border: none;
+        margin: 30px 0;
+      }
+
+      .form-control {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(255, 127, 80, 0.25);
+      }
+
+      .form-label {
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 8px;
+      }
+
+      .empty-message {
+        text-align: center;
+        padding: 30px;
+        color: #777;
+        font-style: italic;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        padding: 30px 0;
+        margin-top: auto;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .card-body {
+          padding: 20px;
+        }
+
+        .btn-danger {
+          padding: 4px 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          FlavorFlow
+        </a>
+      </div>
+    </nav>
+
+    <div class="container dashboard-container">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="section-title">
+            <span class="section-icon"><i class="bi bi-speedometer2"></i></span>
+            Admin Dashboard
+          </h2>
+
+          <p class="lead">
+            Welcome to the FlavorFlow admin management interface.
+          </p>
+
+          <hr />
+
+          <!-- Restaurants Section -->
+          <h3 class="subsection-title">
+            <span class="section-icon"><i class="bi bi-shop"></i></span>
+            Restaurants Management
+          </h3>
+
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="restaurantList">
+                        <!-- Renderizar restaurantes diretamente do servidor -->
+                        <% if (typeof restaurants !== 'undefined' && restaurants.length > 0) { %>
+                          <% restaurants.forEach(function(restaurant) { %>
+                            <tr>
+                              <td><%= restaurant._id %></td>
+                              <td><%= restaurant.name %></td>
+                              <td>
+                                <!-- <form action="/api/v1/admin/updateRestaurantPage/<%= restaurant._id %>" method="POST" style="display: inline;"> -->
+                                  <button type="submit" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-building me-1"></i> <a class="text-decoration-none text-white" href="/api/v1/admin/updateRestaurantPage/<%= restaurant._id %>">Manage</a>
+                                  </button>
+                                <!-- </form> -->
+                                <form action="/api/v1/admin/removeRestaurant/<%= restaurant._id %>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('You sure you want to delete this restaurant?')">
+                                    <i class="bi bi-trash me-1"></i> Remove
+                                  </button>
+                                </form>
+                              </td>
+                            </tr>
+                          <% }); %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="3" class="empty-message">
+                              <i class="bi bi-exclamation-circle me-2"></i>
+                              <%= typeof error !== 'undefined' ? error : 'No restaurants registered.' %>
+                            </td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-plus-circle me-2"></i> Create Restaurant
+                </div>
+                <div class="card-body">
+                  <form
+                    action="/api/v1/restaurants/createRestaurant"
+                    method="POST" enctype="multipart/form-data"
+                  >
+                    <div class="mb-3">
+                      <label for="menuName" class="form-label"
+                        >Restaurant Name:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-card-text"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="name"
+                          name="name"
+                          required
+                          placeholder="Enter restaurant name"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Restaurant Description:</label
+                      >
+                      <div class="input-group">
+                        <textarea
+                          class="form-control"
+                          id="description"
+                          name="description"
+                          rows="4"
+                          placeholder="Enter restaurant description"
+                          required
+                        ></textarea>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="image" class="form-label">Restaurant Image</label>
+                      <div class="input-group">
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Street:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-signpost"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="street"
+                          name="street"
+                          required
+                          placeholder="Enter restaurant street"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label">City:</label>
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-building"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="city"
+                          name="city"
+                          required
+                          placeholder="Enter restaurant city"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Postal Code:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-mailbox"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="postalCode"
+                          name="postalCode"
+                          required
+                          placeholder="Enter restaurant postal Code"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Preparation Time (minutes):</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-hourglass-split"></i
+                        ></span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="preparationTime"
+                          name="preparationTime"
+                          placeholder="30"
+                          min="1"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Delivery Time (minutes)</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-bicycle"></i
+                        ></span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="deliveryTime"
+                          name="deliveryTime"
+                          placeholder="20"
+                          min="1"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="maxDeliveryRadius" class="form-label"
+                        >Max Delivery Radius (km)</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-geo-fill"></i
+                        ></span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="maxDeliveryRadius"
+                          name="maxDeliveryRadius"
+                          placeholder="5"
+                          min="0.1"
+                          step="0.1"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="maxOrdersPerHour" class="form-label"
+                        >Max Orders Per Hour</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-calendar-check"></i
+                        ></span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="maxOrdersPerHour"
+                          name="maxOrdersPerHour"
+                          placeholder="10"
+                          min="1"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="bi bi-plus-lg me-2"></i> Create Restaurant
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Restaurants Validation Section -->
+          <h3 class="subsection-title">
+            <span class="section-icon"><i class="bi bi-check-circle"></i></span>
+            Restaurants Validation
+          </h3>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <i class="bi bi-clipboard-check me-2"></i> Restaurants Pending
+                  Validation
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Username</th>
+                          <th>Full Name</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="restaurantsToValidateList">
+                        <% if (typeof restaurantsToValidate !== 'undefined' && restaurantsToValidate.length > 0) { %>
+                          <% restaurantsToValidate.forEach(function(restaurant) { %>
+                            <tr>
+                              <td><%= restaurant._id %></td>
+                              <td><%= restaurant.userName %></td>
+                              <td><%= restaurant.fullName %></td>
+                              <td>
+                                <form action="/api/v1/admin/validateRestaurant/<%= restaurant._id %>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btn btn-primary btn-sm me-2" onclick="return confirm('You sure you want to validate this restaurant?')">
+                                    <i class="bi bi-check-lg me-1"></i> Validate
+                                  </button>
+                                </form>
+                              </td>
+                            </tr>
+                          <% }); %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="4" class="empty-message">
+                              <i class="bi bi-check-all me-2"></i>
+                              <%= typeof error !== 'undefined' ? error : 'No restaurants pending validation.' %>
+                            </td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categories Section -->
+          <h3 class="subsection-title">
+            <span class="section-icon"><i class="bi bi-tags"></i></span>
+            Categories Management
+          </h3>
+
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                          <% categories.forEach(function(category) { %>
+                            <tr>
+                              <td><%= category._id %></td>
+                              <td><%= category.name %></td>
+                              <td>
+                                <form action="/api/v1/admin/removeCategory/<%= category._id %>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('You sure you want to delete this category?')">
+                                    <i class="bi bi-trash me-1"></i> Remove
+                                  </button>
+                                </form>
+                              </td>
+                            </tr>
+                          <% }); %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="3" class="empty-message">
+                              <i class="bi bi-exclamation-circle me-2"></i>
+                              <%= typeof error !== 'undefined' ? error : 'No categories registered.' %>
+                            </td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-plus-circle me-2"></i> Create Category
+                </div>
+                <div class="card-body">
+                  <form action="/api/v1/admin/createCategory" method="POST">
+                    <div class="mb-3">
+                      <label for="name" class="form-label"
+                        >Category Name:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-tag"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="name"
+                          name="name"
+                          required
+                          placeholder="Enter category name"
+                        />
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="bi bi-plus-lg me-2"></i> Create Category
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Menus Section -->
+          <h3 class="subsection-title">
+            <span class="section-icon"><i class="bi bi-journal-text"></i></span>
+            Menus Management
+          </h3>
+
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="menusList">
+                        <% if (typeof menus !== 'undefined' && menus.length > 0) { %>
+                          <% menus.forEach(function(menu) { %>
+                            <tr>
+                              <td><%= menu._id %></td>
+                              <td><%= menu.name %></td>
+                              <td><%= menu.description %></td>
+                              <td>
+                                <form action="/api/v1/admin/removeMenu/<%= menu._id %>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('You sure you want to delete this menu?')">
+                                    <i class="bi bi-trash me-1"></i> Remove
+                                  </button>
+                                </form>
+                              </td>
+                            </tr>
+                          <% }); %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="4" class="empty-message">
+                              <i class="bi bi-exclamation-circle me-2"></i>
+                              <%= typeof error !== 'undefined' ? error : 'No menus registered.' %>
+                            </td>
+                          </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="card">
+                <div class="card-header">
+                  <i class="bi bi-plus-circle me-2"></i> Create Menu
+                </div>
+                <div class="card-body">
+                  <form action="/api/v1/menus/createMenu" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                      <label for="menuName" class="form-label"
+                        >Menu Name:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-card-text"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="menuName"
+                          name="name"
+                          required
+                          placeholder="Enter menu name"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="description" class="form-label"
+                        >Menu Description:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-pencil"></i
+                        ></span>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="description"
+                          name="description"
+                          required
+                          placeholder="Enter menu description"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="menuName" class="form-label"
+                        >Menu Image:</label
+                      >
+                      <div class="input-group">
+                        <span class="input-group-text"
+                          ><i class="bi bi-card-text"></i
+                        ></span>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required />
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                      <i class="bi bi-plus-lg me-2"></i> Create Menu
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 FlavorFlow. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

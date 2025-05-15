@@ -1,0 +1,112 @@
+.btn-primary {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+  
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 69, 0, 0.2);
+}
+  
+.form-container {
+    background-color: var(--card-bg, #fff);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-bottom: 50px;
+    overflow: hidden;
+  }
+  
+  .form-header {
+    background: linear-gradient(to right, var(--primary-color, #ff7043), var(--primary-dark, #d84315));
+    color: white;
+    padding: 20px 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .form-body {
+    padding: 30px;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color:  var(--text-color);
+  }
+  
+  .alert-message {
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    position: relative;
+  }
+  
+  .alert-message.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .alert-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    line-height: 1;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    color: inherit;
+  }
+  
+  .table th,
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .img-fluid {
+    max-height: 180px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .form-body {
+      padding: 20px;
+    }
+  
+    .actions {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .btn {
+      width: 100%;
+    }
+  
+    .form-header {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  

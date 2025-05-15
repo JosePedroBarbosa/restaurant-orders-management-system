@@ -1,0 +1,244 @@
+<div class="container profile-container">
+  <div class="row">
+    <!-- Personal Information Card -->
+    <div class="col-lg-5">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Personal Information</h4>
+        </div>
+
+        <div class="card-body">
+          <div class="section-title">
+            <span class="section-icon"><i class="bi bi-person"></i></span>
+            Account Details
+          </div>
+
+          <div class="info-label">Username:</div>
+          <div class="info-value">{{ user?.userName }}</div>
+
+          <div class="info-label">Full Name:</div>
+          <div class="info-value">{{ user?.fullName }}</div>
+
+          <hr />
+
+          <div class="section-title">
+            <span class="section-icon"><i class="bi bi-geo-alt"></i></span>
+            Address Details
+          </div>
+
+          <div *ngIf="user.address">
+            <div class="info-label">Street:</div>
+            <div class="info-value">{{ user.address.street }}</div>
+
+            <div class="info-label">City:</div>
+            <div class="info-value">{{ user.address.city }}</div>
+
+            <div class="info-label">Postal Code:</div>
+            <div class="info-value">{{ user.address.postalCode }}</div>
+          </div>
+          <div *ngIf="!user.address">
+            <div class="info-value">No address provided</div>
+          </div>
+
+          <hr />
+
+          <div class="section-title">
+            <span class="section-icon"><i class="bi bi-person-badge"></i></span>
+            Role Information
+          </div>
+
+          <div class="info-label">Current Role:</div>
+          <div class="info-value">{{ user.role }}</div>
+
+          <div *ngIf="isRestaurant()">
+            <div class="info-label">Restaurant Verification Status:</div>
+            <div class="info-value">
+              <span *ngIf="user.isValidated" class="badge badge-success">
+                <i class="bi bi-check-circle me-1"></i> Verified
+              </span>
+              <span *ngIf="!user.isValidated" class="badge badge-danger">
+                <i class="bi bi-x-circle me-1"></i> Not Verified
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role-specific Actions Card -->
+      <div class="card mt-4" *ngIf="isAdmin() || isRestaurant()">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <span *ngIf="isAdmin()">Admin Actions</span>
+            <span *ngIf="isRestaurant()">Restaurant Management</span>
+          </h4>
+        </div>
+        <div class="card-body">
+          <!-- Admin Actions -->
+          <div *ngIf="isAdmin()">
+            <div class="section-title">
+              <span class="section-icon"
+                ><i class="bi bi-shield-lock"></i
+              ></span>
+              Administrative Tools
+            </div>
+            <div class="action-buttons">
+              <button class="btn btn-logout w-100 mb-3">
+                <a
+                  class="text-white text-decoration-none"
+                  routerLink="/admin/dashboard"
+                >
+                  <i class="bi bi-speedometer2 me-2"></i>
+                  Admin Dashboard
+                </a>
+              </button>
+            </div>
+          </div>
+
+          <!-- Restaurant Owner Actions -->
+          <div *ngIf="isRestaurant()">
+            <div class="section-title">
+              <span class="section-icon"><i class="bi bi-shop"></i></span>
+              Restaurant Tools
+            </div>
+
+            <!-- If not validated -->
+            <div *ngIf="!user.isValidated" class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              Your account needs verification before you can create or manage a
+              restaurant.
+            </div>
+
+            <!-- If validated -->
+            <div *ngIf="user.isValidated">
+              <div class="mb-3">
+                <div class="info-label mb-3">
+                  Note: You can create only one restaurant.
+                </div>
+                <button class="btn btn-logout w-100">
+                  <a
+                    class="text-white text-decoration-none"
+                    routerLink="/restaurants/createRestaurant"
+                  >
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Create Restaurant
+                  </a>
+                </button>
+                <button class="btn btn-logout w-100 mb-3 mt-3">
+                  <a
+                    class="text-white text-decoration-none"
+                    routerLink="/restaurants/dashboard"
+                  >
+                    <i class="bi bi-gear me-2"></i>
+                    Restaurant Dashboard
+                  </a>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders History Card -->
+    <div class="col-lg-7">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">Orders History</h4>
+        </div>
+
+        <div class="card-body">
+          <div class="section-title mb-3">
+            <span class="section-icon"><i class="bi bi-bag-check"></i></span>
+            Recent Orders
+          </div>
+
+          <!-- Loading / Erro -->
+          <div *ngIf="historyLoading" class="text-center py-4">
+            <div class="spinner-border" role="status"></div>
+            <p class="mt-2">A carregar histórico de encomendas...</p>
+          </div>
+
+          <!-- <div *ngIf="historyError" class="alert alert-danger">
+            {{ historyError }}
+          </div> -->
+
+          <!-- Lista de encomendas -->
+          <ul
+            class="list-group"
+            *ngIf="!historyLoading && orderHistory.length > 0"
+          >
+            <li
+              class="list-group-item d-flex justify-content-between align-items-start"
+              *ngFor="let order of orderHistory"
+            >
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">
+                  <i
+                    class="bi me-2"
+                    [ngClass]="isRestaurant() ? 'bi-person' : 'bi-shop'"
+                  ></i>
+                  {{
+                    isRestaurant()
+                      ? order.customer?.fullName || "Cliente desconhecido"
+                      : order.restaurant?.name || "Restaurante desconhecido"
+                  }}
+                </div>
+
+                <small class="text-muted">
+                  <i class="bi bi-clock me-1"></i
+                  >{{ order.createdAt | date : "short" }}
+                </small>
+                <br />
+
+                <small *ngIf="order.deliveryDetails">
+                  <i class="bi bi-geo-alt me-1"></i
+                  >{{ order.deliveryDetails.street }},
+                  {{ order.deliveryDetails.city }},
+                  {{ order.deliveryDetails.postalCode }}
+                </small>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                <span
+                  class="badge rounded-pill"
+                  [ngClass]="{
+                    'bg-success': order.status === 'delivered',
+                    'bg-danger': order.status === 'cancelled'
+                  }"
+                >
+                  {{ order.status | titlecase }}
+                </span>
+
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  [routerLink]="[
+                    isRestaurant() ? '/restaurantOrder' : '/order',
+                    order._id
+                  ]"
+                >
+                  <i class="bi bi-eye"></i> View
+                </button>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Sem encomendas -->
+          <div
+            *ngIf="!historyLoading && orderHistory.length === 0"
+            class="empty-state"
+          >
+            <div class="empty-state-content">
+              <i class="bi bi-info-circle display-4 text-muted mb-3"></i>
+              <h5 class="text-muted mt-4">
+                No delivered or cancelled orders found.
+              </h5>
+              <p class="text-muted">
+                Your delivered or cancelled orders will appear here.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

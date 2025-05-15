@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - FlavorFlow</title>
+    <link rel="icon" type="image/x-icon" href="/images/icon/icon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css"
+    />
+    <style>
+      .profile-container {
+        margin: 40px auto 60px;
+      }
+
+      .card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        margin-bottom: 30px;
+      }
+
+      .card-header {
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        color: white;
+        padding: 20px 30px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .card-body {
+        padding: 30px;
+      }
+
+      .section-title {
+        color: var(--primary-dark);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+      }
+
+      .section-icon {
+        margin-right: 10px;
+        background-color: var(--primary-light);
+        color: white;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      hr {
+        border-color: #eee;
+        margin: 20px 0;
+      }
+
+      .badge {
+        padding: 8px 12px;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 0.8rem;
+      }
+
+      .badge-success {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .badge-danger {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .btn-logout {
+        background: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        color: white;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 10px rgba(255, 69, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .btn-logout:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(255, 69, 0, 0.3);
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 5px;
+      }
+
+      .info-value {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        padding: 30px 0;
+        margin-top: auto;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .card-body {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">FlavorFlow</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <form action="/api/v1/auth/logout" method="POST">
+                <button type="submit" class="btn btn-logout">
+                  Logout <i class="bi bi-box-arrow-right ms-2"></i>
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container profile-container">
+      <div class="row">
+        <!-- Personal Information Card -->
+        <div class="col-lg-5">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="mb-0">Personal Information</h4>
+            </div>
+
+            <div class="card-body">
+              <div class="section-title">
+                <span class="section-icon"><i class="bi bi-person"></i></span>
+                Account Details
+              </div>
+
+              <div class="info-label">Username:</div>
+              <div class="info-value"><%= user.userName %></div>
+
+              <div class="info-label">Full Name:</div>
+              <div class="info-value"><%= user.fullName %></div>
+
+              <hr />
+
+              <div class="section-title">
+                <span class="section-icon"><i class="bi bi-geo-alt"></i></span>
+                Address Details
+              </div>
+
+              <% if (user.address) { %>
+              <div class="info-label">Street:</div>
+              <div class="info-value"><%= user.address.street %></div>
+
+              <div class="info-label">City:</div>
+              <div class="info-value"><%= user.address.city %></div>
+
+              <div class="info-label">Postal Code:</div>
+              <div class="info-value"><%= user.address.postalCode %></div>
+              <% } else { %>
+              <div class="info-value">No address provided</div>
+              <% } %>
+
+              <hr />
+
+              <div class="section-title">
+                <span class="section-icon"
+                  ><i class="bi bi-person-badge"></i
+                ></span>
+                Role Information
+              </div>
+
+              <div class="info-label">Current Role:</div>
+              <div class="info-value"><%= user.role %></div>
+
+              <% if (user.role === 'restaurant') { %>
+              <div class="info-label">Restaurant Verification Status:</div>
+              <div class="info-value">
+                <% if (user.isValidated) { %>
+                <span class="badge badge-success"
+                  ><i class="bi bi-check-circle me-1"></i> Verified</span
+                >
+                <% } else { %>
+                <span class="badge badge-danger"
+                  ><i class="bi bi-x-circle me-1"></i> Not Verified</span
+                >
+                <% } %>
+              </div>
+              <% } %>
+
+              <% if (user.role === 'admin') { %>
+                <hr />
+                <button class="btn btn-logout">
+                  <a
+                    class="text-white text-decoration-none"
+                    href="/api/v1/admin/dashboard"
+                  >
+                    Admin Dashboard
+                    <i class="bi bi-arrow-right-circle ms-2"></i>
+                  </a>
+                </button>
+              <% } %>
+
+              <hr />
+
+              <% if (user.role === 'restaurant' && user.isValidated) { %>
+              <div class="info-label mb-3">
+                You can create only one restaurant.
+              </div>
+              <button class="btn btn-logout">
+                <a
+                  class="text-white text-decoration-none"
+                  href="/api/v1/restaurants/createRestaurant"
+                >
+                  Create Restaurant
+                  <i class="bi bi-arrow-right-circle ms-2"></i>
+                </a>
+              </button>
+
+              <hr />
+
+              <button class="btn btn-logout mt-4">
+                <a
+                  class="text-white text-decoration-none"
+                  href="/api/v1/restaurants/updateRestaurant"
+                >
+                  Go to Restaurant Dashboard
+                  <i class="bi bi-arrow-right-circle ms-2"></i>
+                </a>
+              </button>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders History Card -->
+        <div class="col-lg-7">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="mb-0">Orders History</h4>
+            </div>
+
+            <div class="card-body">
+              <div class="section-title">
+                <span class="section-icon"
+                  ><i class="bi bi-bag-check"></i
+                ></span>
+                Recent Orders
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 FlavorFlow. All rights reserved.</p>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

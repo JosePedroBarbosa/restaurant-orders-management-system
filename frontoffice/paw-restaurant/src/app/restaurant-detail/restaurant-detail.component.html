@@ -1,0 +1,150 @@
+<div class="container mt-4">
+  <div class="restaurant-header">
+    <img
+      [src]="getRestaurantFullImageUrl(restaurant.image)"
+      class="restaurant-image"
+      alt="{{ restaurant.name }}"
+      (error)="handleImageError($event)"
+    />
+    <div class="restaurant-overlay">
+      <h1 class="restaurant-name">{{ restaurant.name }}</h1>
+      <div class="d-flex align-items-center">
+        <i class="bi bi-geo-alt info-icon"></i>
+        <span
+          >{{ restaurant.address.street }}, {{ restaurant.address.city }} -
+          {{ restaurant.address.postalCode }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="restaurant-info">
+        <h2>
+          <i class="bi bi-info-circle-fill info-icon"></i> About the restaurant
+        </h2>
+        <p class="restaurant-description">{{ restaurant.description }}</p>
+      </div>
+
+      <div
+        *ngIf="restaurant.menus && restaurant.menus.length > 0"
+        class="menu-section"
+      >
+        <h2 class="menu-title">
+          <i class="bi bi-menu-button-wide me-2"></i> Available Menus
+        </h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+          <div *ngFor="let menu of restaurant.menus" class="col">
+            <div class="card h-100 menu-card">
+              <div class="menu-image-container">
+                <img
+                  [src]="getMenuFullImageUrl(menu.image)"
+                  class="card-img-top menu-image"
+                  alt="{{ menu.name }}"
+                  (error)="handleImageError($event)"
+                />
+              </div>
+              <div class="card-body">
+                <h3 class="menu-card-title">{{ menu.name }}</h3>
+                <a [routerLink]="['/menu', menu._id]" class="btn menu-view-btn">
+                  View Menu <i class="bi bi-arrow-right-circle ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!restaurant.menus || restaurant.menus.length === 0">
+        <div class="no-items-container text-center mt-5">
+          <div class="icon-container">
+            <i class="bi bi-exclamation-circle"></i>
+          </div>
+          <h4 class="message-title">No Menus Available</h4>
+          <p class="message-text">
+            Please check back later or contact the restaurant for more
+            information.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4" *ngIf="restaurant.deliverySettings">
+      <div class="restaurant-info">
+        <h3><i class="bi bi-truck info-icon"></i>Delivery Informations</h3>
+        <div class="delivery-card">
+          <div class="delivery-stats">
+            <div class="delivery-stat-item">
+              <i class="bi bi-hourglass-split me-2 text-primary"></i>
+              <div>
+                <div class="small text-muted">Preparation Time</div>
+                <strong
+                  >{{ restaurant.deliverySettings.preparationTime }} min</strong
+                >
+              </div>
+            </div>
+            <div class="delivery-stat-item">
+              <i class="bi bi-bicycle me-2 text-primary"></i>
+              <div>
+                <div class="small text-muted">Delivery Time</div>
+                <strong
+                  >{{ restaurant.deliverySettings.deliveryTime }} min</strong
+                >
+              </div>
+            </div>
+            <div class="delivery-stat-item">
+              <i class="bi bi-geo-alt me-2 text-primary"></i>
+              <div>
+                <div class="small text-muted">Max Delivery Radius</div>
+                <strong
+                  >{{
+                    restaurant.deliverySettings.maxDeliveryRadius
+                  }}
+                  km</strong
+                >
+              </div>
+            </div>
+            <div class="delivery-stat-item">
+              <i class="bi bi-calendar-check me-2 text-primary"></i>
+              <div>
+                <div class="small text-muted">Máx Orders Per Hour</div>
+                <strong>{{
+                  restaurant.deliverySettings.maxOrdersPerHour
+                }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="review-summary my-4 p-3 bg-light border-start border-4 rounded shadow-sm border-warning"
+        >
+          <h5 class="mb-2 d-flex align-items-center">
+            <i class="bi bi-stars me-2 text-warning fs-5"></i>
+            Average Customer Reviews
+          </h5>
+
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-star-fill text-warning':
+                    star <= math.round(averageRating),
+                  'bi-star text-muted': star > math.round(averageRating)
+                }"
+              ></i>
+            </ng-container>
+            <span class="fw-semibold">{{ averageRating.toFixed(1) }}/5.0</span>
+          </div>
+
+          <p class="text-muted mb-0" *ngIf="totalReviews > 0">
+            Based on {{ totalReviews }} review{{
+              totalReviews === 1 ? "" : "s"
+            }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

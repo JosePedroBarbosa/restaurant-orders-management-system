@@ -1,0 +1,78 @@
+<div class="container login-container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="form-container">
+        <div class="form-header">
+          <h4 class="mb-0">Account Login</h4>
+        </div>
+
+        <div class="form-body">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+            <!-- Mensagem de erro -->
+            <div *ngIf="message" class="alert alert-danger alert-dismissible fade show" role="alert">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              {{ message }}
+              <button type="button" class="btn-close" (click)="clearMessage()" aria-label="Close"></button>
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label for="userName" class="form-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-person"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="userName"
+                  formControlName="userName"
+                  placeholder="Enter your username"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input
+                    [type]="passwordVisible ? 'text' : 'password'"
+                    class="form-control"
+                    id="password"
+                    formControlName="password"
+                    placeholder="Enter your password"
+                    required
+                />
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    (click)="togglePasswordVisibility()"
+                >
+                    <i
+                    [class.bi-eye]="!passwordVisible"
+                    [class.bi-eye-slash]="passwordVisible"
+                    ></i>
+                </button>
+                </div>
+            </div>
+
+            <!-- Botão de Login -->
+            <button type="submit" class="btn btn-primary">
+              Login <i class="bi bi-box-arrow-in-right ms-2"></i>
+            </button>
+
+            <!-- Texto de Signup -->
+            <div class="signup-text mt-4">
+              Don't have an account?
+              <a [routerLink]="['/auth/register']" class="signup-link">Sign up now</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

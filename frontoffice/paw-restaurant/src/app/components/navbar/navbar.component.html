@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">FlavorFlow</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <!-- Mostra os links de login e signup apenas se o user não estiver autenticado -->
+                <li class="nav-item me-2" *ngIf="!isAuthenticated()">
+                    <a class="nav-link" [routerLink]="['/auth/login']">
+                        <button class="btn text-white">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </button>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="!isAuthenticated()">
+                    <a class="nav-link" [routerLink]="['/auth/register']">
+                        <button class="btn text-white">
+                            <i class="bi bi-person-plus me-1"></i> Sign Up
+                        </button>
+                    </a>
+                </li>
+
+                <!-- Mostra os links de profile e logout apenas se o user estiver autenticado -->
+                <li class="nav-item me-2" *ngIf="isAuthenticated()">
+                    <a class="nav-link" [routerLink]="['/auth/profile']">
+                        <button class="btn text-white">
+                            <i class="bi bi-person me-1"></i> Profile
+                        </button>
+                    </a>
+                </li>
+                <!-- Botão de Carrinho -->
+                <li class="nav-item me-2" *ngIf="isCustomer()">
+                    <a class="nav-link" [routerLink]="['/cart']">
+                        <button class="btn text-white">
+                            <i class="bi bi-cart3 me-1"></i> Cart
+                        </button>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="isAuthenticated()">
+                    <a class="nav-link" (click)="onLogout()">
+                        <button class="btn text-white">
+                            <i class="bi bi-box-arrow-right me-1"></i> Logout
+                        </button>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= restaurant.name %> - FlavorFlow</title>
+    <link rel="icon" type="image/x-icon" href="/images/icon/icon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css"
+    />
+    <style>
+      .btn-primary {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(255, 69, 0, 0.2);
+      }
+
+      .restaurant-header {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .restaurant-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      .restaurant-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        padding: 30px 20px;
+        color: white;
+      }
+      
+      .restaurant-name {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      }
+      
+      .restaurant-info {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+      
+      .restaurant-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #555;
+        border-left: 4px solid var(--primary-light);
+        padding-left: 15px;
+        margin: 20px 0;
+      }
+      
+      .info-icon {
+        color: var(--primary-dark);
+        margin-right: 8px;
+      }
+      
+      .delivery-card {
+        background-color: #fff9f5;
+        border-left: 4px solid var(--primary-color);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+      }
+      
+      .delivery-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 15px;
+      }
+      
+      .delivery-stat-item {
+        background-color: white;
+        border-radius: 10px;
+        padding: 12px 15px;
+        flex: 1;
+        min-width: 180px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+      }
+      
+      .menu-section {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+      
+      .menu-title {
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--primary-light);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      
+      .menu-category {
+        margin-bottom: 30px;
+      }
+      
+      .menu-category-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #444;
+      }
+      
+      .menu-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      
+      .menu-item {
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 15px;
+        transition: all 0.3s ease;
+      }
+      
+      .menu-item:hover {
+        box-shadow: 0 8px 20px rgba(255, 127, 80, 0.15);
+        transform: translateY(-3px);
+      }
+      
+      .menu-item-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+      }
+      
+      .menu-item-price {
+        color: var(--primary-dark);
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      
+      .menu-item-description {
+        color: #666;
+        margin-top: 8px;
+        font-size: 0.95rem;
+      }
+      
+      @media (max-width: 768px) {
+        .restaurant-header {
+          height: 300px;
+        }
+        
+        .restaurant-name {
+          font-size: 1.8rem;
+        }
+        
+        .menu-items {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .menu-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(255, 127, 80, 0.2);
+      }
+
+      .menu-image-container {
+        height: 180px;
+        overflow: hidden;
+      }
+
+      .menu-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .menu-card:hover .menu-image {
+        transform: scale(1.05);
+      }
+
+      .menu-card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 10px;
+      }
+
+      .menu-card-description {
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+      }
+
+      .menu-view-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      .menu-view-btn:hover {
+        background-color: var(--primary-dark);
+        color: white;
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(255, 69, 0, 0.2);
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="/">FlavorFlow</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <% if (locals.user) { %>
+              <li class="nav-item me-2">
+                <a class="nav-link" href="/api/v1/auth/profile">
+                  <button class="btn text-white">
+                    <i class="bi bi-person-circle me-1"></i> My Account
+                  </button>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/v1/cart/cartPage">
+                  <button class="btn text-white">
+                    <i class="bi bi-cart3 me-1"></i> Cart
+                  </button>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="nav-item me-2">
+                <a class="nav-link" href="/api/v1/auth/login">
+                  <button class="btn text-white">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                  </button>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/api/v1/auth/signup">
+                  <button class="btn text-white">
+                    <i class="bi bi-person-plus me-1"></i> Sign Up
+                  </button>
+                </a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <div class="restaurant-header">
+        <% if (restaurant.image) { %>
+        <img src="/<%= restaurant.image %>" class="restaurant-image" alt="<%= restaurant.name %>" />
+        <% } else { %>
+        <img src="/images/default-restaurant.png" class="restaurant-image" alt="<%= restaurant.name %>" />
+        <% } %>
+        <div class="restaurant-overlay">
+          <h1 class="restaurant-name"><%= restaurant.name %></h1>
+          <div class="d-flex align-items-center">
+            <i class="bi bi-geo-alt info-icon"></i>
+            <span><%= restaurant.address.street %>, <%= restaurant.address.city %> - <%= restaurant.address.postalCode %></span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="restaurant-info">
+            <h2><i class="bi bi-info-circle-fill info-icon"></i>About the restaurant</h2>
+            <p class="restaurant-description"><%= restaurant.description %></p>
+          </div>
+          
+          <% if (restaurant.menus && restaurant.menus.length > 0) { %>
+            <div class="menu-section">
+              <h2 class="menu-title"><i class="bi bi-menu-button-wide me-2"></i>Available Menus</h2>
+              
+              <% if (restaurant.menus && restaurant.menus.length > 0) { %>
+                <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+                  <% restaurant.menus.forEach(menu => { %>
+                    <div class="col">
+                      <div class="card h-100 menu-card">
+                        <div class="menu-image-container">
+                        <% if (menu.image) { %>
+                            <img src="/<%= menu.image %>" class="card-img-top menu-image" alt="<%= menu.name %>">
+                        <% } else { %>
+                          <img src="/images/default-menu.png" class="card-img-top menu-image" alt="<%= menu.name %>">
+                        <% } %>
+                        </div>
+                        <div class="card-body">
+                          <h3 class="menu-card-title"><%= menu.name %></h3>
+                          <a href="/api/v1/menus/menuDetails/<%= menu.id %>" class="btn menu-view-btn">
+                            View Menu <i class="bi bi-arrow-right-circle ms-2"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              <% } else { %>
+                <div class="alert alert-light">
+                  <p class="mb-0">There are no menus to display at the moment.</p>
+                </div>
+              <% } %>
+            </div>
+          <% } else { %>
+          <div class="alert alert-light">
+            <p class="mb-0">There is no menus to display at the moment.</p>
+          </div>
+          <% } %>
+        </div>
+        
+        <div class="col-lg-4">
+          
+          <% if (restaurant.deliverySettings) { %>
+          <div class="restaurant-info">
+            <h3><i class="bi bi-truck info-icon"></i>Delivery Informations</h3>
+            <div class="delivery-card">
+              <div class="delivery-stats">
+                <div class="delivery-stat-item">
+                  <i class="bi bi-hourglass-split me-2 text-primary"></i>
+                  <div>
+                    <div class="small text-muted">Preparation Time</div>
+                    <strong><%= restaurant.deliverySettings.preparationTime %> min</strong>
+                  </div>
+                </div>
+                <div class="delivery-stat-item">
+                  <i class="bi bi-bicycle me-2 text-primary"></i>
+                  <div>
+                    <div class="small text-muted">Delivery Time</div>
+                    <strong><%= restaurant.deliverySettings.deliveryTime %> min</strong>
+                  </div>
+                </div>
+                <div class="delivery-stat-item">
+                  <i class="bi bi-geo-alt me-2 text-primary"></i>
+                  <div>
+                    <div class="small text-muted">Max Delivery Radius</div>
+                    <strong><%= restaurant.deliverySettings.maxDeliveryRadius %> km</strong>
+                  </div>
+                </div>
+                <div class="delivery-stat-item">
+                  <i class="bi bi-calendar-check me-2 text-primary"></i>
+                  <div>
+                    <div class="small text-muted">Máx Orders Per Hour</div>
+                    <strong><%= restaurant.deliverySettings.maxOrdersPerHour %></strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white py-3">
+      <div class="container text-center">
+        <p>&copy; 2025 FlavorFlow. All rights reserved.</p>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

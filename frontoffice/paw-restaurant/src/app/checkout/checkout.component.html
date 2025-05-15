@@ -1,0 +1,191 @@
+<div class="container mt-4">
+  <div class="checkout-header">
+    <h1 class="checkout-title">
+      <i class="bi bi-credit-card me-2"></i>Checkout
+    </h1>
+    <p class="checkout-subtitle">
+      Please provide your delivery and payment details
+    </p>
+  </div>
+
+  <div
+    class="toast-container position-fixed top-0 start-50 translate-middle-x mt-4"
+    style="z-index: 1055; max-width: 90%"
+    *ngIf="submitErrorMessage"
+  >
+    <div
+      class="toast align-items-center text-white bg-danger border-0 show"
+      role="alert"
+    >
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ submitErrorMessage }}
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          (click)="submitErrorMessage = ''"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Cart is empty -->
+  <div
+    *ngIf="!isLoading && !hasCartItems"
+    class="mt-5 mb-5 pb-5 d-flex justify-content-center"
+  >
+    <div class="card shadow-lg p-4 text-center" style="max-width: 600px">
+      <div class="card-body">
+        <div class="mb-3">
+          <i class="bi bi-cart-x-fill text-danger" style="font-size: 3rem"></i>
+        </div>
+        <h2 class="card-title text-danger mb-3">Your Cart is Empty</h2>
+        <p class="card-text mb-4">
+          It looks like you haven't added any items to your cart yet.<br />
+          Please browse the menu and select your favorite dishes to proceed with
+          the checkout.
+        </p>
+        <a routerLink="/" class="btn btn-primary me-2 mb-3">
+          <i class="bi bi-arrow-left"></i> Browse Menu
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <div *ngIf="!isLoading && hasCartItems" class="row">
+    <!-- Form Section -->
+    <div class="col-lg-8">
+      <div class="cart-section">
+        <h2 class="section-title">
+          <i class="bi bi-truck me-2"></i>Delivery & Payment Details
+        </h2>
+
+        <form
+          [formGroup]="checkoutForm"
+          class="checkout-form"
+          (ngSubmit)="submitOrder()"
+        >
+          <div class="mb-3">
+            <label class="form-label">Citizen Card Number</label>
+            <input
+              formControlName="citizenCardNumber"
+              class="form-control"
+              type="text"
+              placeholder="12345678"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input
+              formControlName="customerPhone"
+              class="form-control"
+              type="tel"
+              placeholder="912 345 678"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Street</label>
+            <input
+              formControlName="street"
+              class="form-control"
+              type="text"
+              placeholder="123 Main St"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">City</label>
+            <input
+              formControlName="city"
+              class="form-control"
+              type="text"
+              placeholder="Lisbon"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Postal Code</label>
+            <input
+              formControlName="postalCode"
+              class="form-control"
+              type="text"
+              placeholder="1000-001"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Delivery Type</label>
+            <select formControlName="deliveryType" class="form-select">
+              <option value="">-- Select --</option>
+              <option value="delivery">Delivery</option>
+              <option value="dineIn">Dine-in</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Payment Method</label>
+            <select formControlName="paymentMethod" class="form-select">
+              <option value="">-- Select --</option>
+              <option value="cash">Cash</option>
+              <option value="card">Credit Card</option>
+              <option value="online">Online Payment</option>
+              <option value="subscription">Subscription</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Order Note</label>
+            <textarea
+              formControlName="customerNote"
+              class="form-control"
+              rows="3"
+              placeholder="E.g., No onions, leave at the door..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary checkout-btn mt-3">
+            <i class="bi bi-check2-circle me-2"></i>Confirm Order
+          </button>
+
+          <div class="mt-5"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="col-lg-4">
+      <div class="cart-summary">
+        <h2 class="section-title">
+          <i class="bi bi-receipt me-2"></i>Order Summary
+        </h2>
+
+        <div *ngFor="let item of cartItems" class="summary-item">
+          <span>{{ item.menuItem?.name }} (x{{ item.quantity }})</span>
+          <span>€ {{ (item.quantity * item.portionPrice).toFixed(2) }}</span>
+        </div>
+
+        <div class="summary-total">
+          <span class="total-label">Total</span>
+          <span class="total-value">€ {{ totalPrice.toFixed(2) }}</span>
+        </div>
+
+        <div class="alert alert-warning text-center mt-3" *ngIf="timeLeft > 0">
+          ⏳ You have {{ formattedTime }} to complete your order. Your cart will
+          expire soon.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

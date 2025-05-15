@@ -1,0 +1,77 @@
+<div class="container mt-4">
+  <div class="menu-header">
+    <img [src]="getMenuFullImageUrl(menu.menu.image)" class="card-img-top menu-image" alt="{{ menu.menu.name }}" (error)="handleImageError($event)"/>
+    <div class="menu-overlay">
+      <h1 class="menu-name">{{ menu.menu.name }}</h1>
+      <div class="d-flex align-items-center">
+        <i class="bi bi-tag info-icon"></i>
+        <span>{{ menu.menu?.menuItems?.length || 0 }} meals available</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="menu-section">
+        <h2 class="section-title">
+          <i class="bi bi-info-circle-fill info-icon"></i> About this menu
+        </h2>
+        <p class="menu-description">{{ menu.menu?.description }}</p>
+
+        <div class="d-flex align-items-center mt-3">
+            <i class="bi bi-shop info-icon"></i>
+            <span>From: 
+                <a [routerLink]="['/restaurant', menu.menu.restaurant._id]" class="text-decoration-none text-dark">{{ menu.menu.restaurant.name }}</a>
+            </span>
+          </div>
+      </div>
+
+      <div
+        *ngIf="menu.menu?.menuItems?.length > 0; else noItems"
+        class="menu-section"
+      >
+        <h2 class="section-title">
+          <i class="bi bi-list-ul info-icon"></i> Available Meals
+        </h2>
+
+        <div class="menu-items">
+          <div *ngFor="let item of menu.menu.menuItems" class="menu-item">
+            <div class="menu-item-image-container">
+              <img [src]="getMenuFullImageUrl(item.images[0])" class="menu-item-image" alt="{{ item.name }}" (error)="handleImageError($event)"/>
+              <div class="category-badge">{{ item.category?.name }}</div> 
+            </div>
+            <div class="menu-item-content">
+              <h3 class="menu-item-name">{{ item.name }}</h3>
+              <div class="menu-item-description">{{ item.description }}</div>
+              <div class="menu-item-footer">
+                <a
+                  [routerLink]="['/menuItem', item._id]"
+                  class="view-item-btn"
+                >
+                  <i class="bi bi-eye me-2"></i> View Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noItems>
+        <div class="no-items-container text-center mt-5">
+          <div class="icon-container">
+            <i class="bi bi-exclamation-circle"></i>
+          </div>
+          <h4 class="message-title">No Meals Available</h4>
+          <p class="message-text">This menu currently has no meals. Check back later or explore other options!</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="menu-sidebar">
+          <button (click)="goBack()" class="btn btn-primary back-link">
+            <i class="bi bi-house me-2"></i> Back to restaurant
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

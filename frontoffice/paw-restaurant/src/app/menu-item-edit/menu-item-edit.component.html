@@ -1,0 +1,253 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="form-container">
+        <div class="form-header">
+          <h4 class="mb-0">Update Menu Item</h4>
+        </div>
+
+        <div class="form-body">
+            <div *ngIf="editMenuItemMessage" class="alert-message" [ngClass]="{
+                success: editMenuItemMessage.includes('successfully'),
+                error: !editMenuItemMessage.includes('successfully')
+              }">
+                {{ editMenuItemMessage }}
+                <button type="button" class="close-btn" (click)="editMenuItemMessage = ''">
+                  &times;
+                </button>
+            </div>
+          <form
+            [formGroup]="menuItemForm"
+            (ngSubmit)="onSubmit()"
+            enctype="multipart/form-data"
+          >
+            <!-- Basic Info -->
+            <div class="form-section">
+              <h5 class="section-title">
+                <span class="section-icon"
+                  ><i class="bi bi-card-list"></i
+                ></span>
+                Basic Informations
+              </h5>
+              <div class="mb-3">
+                <label for="name" class="form-label">Item Name</label>
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-card-heading"></i
+                  ></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                    placeholder="Item name"
+                    required
+                  />
+                </div>
+                <div class="help-text">
+                  This name will be displayed publicly to customers.
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                  id="description"
+                  class="form-control"
+                  formControlName="description"
+                  rows="4"
+                  required
+                  minlength="10"
+                  maxlength="255"
+                  placeholder="Describe your menu item"
+                ></textarea>
+                <div class="help-text">
+                  A good description helps to attract more customers!
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select
+                  class="form-select"
+                  id="category"
+                  formControlName="category"
+                  required
+                >
+                  <option *ngFor="let cat of categories" [value]="cat._id">
+                    {{ cat.name }}
+                  </option>
+                </select>
+                <div class="help-text">
+                  Select the category that best suits this item.
+                </div>
+              </div>
+            </div>
+
+            <!-- Nutritional Info -->
+            <div class="form-section">
+              <h5 class="section-title">
+                <span class="section-icon"
+                  ><i class="bi bi-info-circle"></i
+                ></span>
+                Nutritional Informations
+              </h5>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="calories" class="form-label"
+                    >Calories (kcal)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="calories"
+                    formControlName="calories"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="proteins" class="form-label">Proteins (g)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="proteins"
+                    formControlName="proteins"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="carbs" class="form-label">Carbs (g)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="carbs"
+                    formControlName="carbs"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="fats" class="form-label">Fats (g)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="fats"
+                    formControlName="fats"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Images -->
+            <div class="form-section">
+              <h5 class="section-title">
+                <span class="section-icon"><i class="bi bi-images"></i></span>
+                Item Images
+              </h5>
+              <div class="mb-3">
+                <label for="images" class="form-label">Add New Images</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="images"
+                  (change)="onImageSelected($event)"
+                  accept="image/*"
+                  multiple
+                />
+                <div class="help-text">
+                  You can select multiple images (JPG, PNG, or GIF).
+                </div>
+              </div>
+              <div
+                *ngIf="imagePreviews?.length"
+                class="image-preview-container"
+              >
+                <img
+                  *ngFor="let img of imagePreviews"
+                  [src]="img"
+                  class="image-preview"
+                  alt="Preview"
+                />
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="actions">
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    <!-- Add Portion Section -->
+    <div class="form-container">
+        <div class="form-header">
+        <h4 class="mb-0">Add New Portion</h4>
+        </div>
+        <div class="form-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+            <label for="portionName" class="form-label">Portion Name</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                <input type="text" id="portionName" class="form-control"
+                    [(ngModel)]="newPortion.name" name="portionName"
+                    placeholder="Medium, Family" required />
+            </div>
+            </div>
+    
+            <div class="col-md-6 mb-3">
+            <label for="portionPrice" class="form-label">Price (€)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                <input type="number" id="portionPrice" class="form-control"
+                    [(ngModel)]="newPortion.price" name="portionPrice"
+                    placeholder="5.99" min="0.01" step="0.01" required />
+            </div>
+            </div>
+        </div>
+        <div class="actions">
+            <button type="button" class="btn btn-primary" (click)="onAddPortion()">Add Portion</button>
+        </div>
+        </div>
+    </div>
+  
+    <!-- Existing Portions Section -->
+    <div class="form-container" *ngIf="portions.length > 0">
+        <div class="form-header">
+        <h4 class="mb-0">Manage Portions</h4>
+        </div>
+        <div class="form-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light"> 
+                <tr>
+                <th>Name</th>
+                <th>Price (€)</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let portion of portions">
+                <td>{{ portion.name }}</td>
+                <td>{{ portion.price | number: '1.2-2' }} €</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" (click)="onRemovePortion(portion._id)">
+                    <i class="bi bi-trash"></i> Remove
+                    </button>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>

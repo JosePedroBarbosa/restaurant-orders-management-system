@@ -1,0 +1,742 @@
+<div *ngIf="!hasRestaurant" class="empty-dashboard-wrapper py-5 d-flex flex-column align-items-center justify-content-center" style="min-height: 70vh;">
+  <div class="empty-dashboard-card text-center px-4 py-5">
+    <div class="empty-dashboard-icon mb-4">
+      <i class="bi bi-building-exclamation" style="font-size: 4rem; color: #ffc107;"></i>
+    </div>
+    <h3 class="empty-dashboard-message mb-3">No restaurant found</h3>
+    <p class="text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+      To access the dashboard and start managing your menus, items, and orders, you need to create a restaurant first.
+    </p>
+  </div>
+</div>
+
+<div *ngIf="hasRestaurant">
+  <div class="container">
+    <div class="form-container">
+      <div class="form-header">
+        <h4 class="mb-0">Update Restaurant Information</h4>
+      </div>
+      <div class="form-body">
+        <div
+          *ngIf="messageRestaurant"
+          class="alert-message"
+          [ngClass]="{
+            success: messageRestaurant.includes('success'),
+            error: !messageRestaurant.includes('success')
+          }"
+        >
+          {{ messageRestaurant }}
+          <button
+            type="button"
+            class="close-btn"
+            (click)="messageRestaurant = ''"
+          >
+            &times;
+          </button>
+        </div>
+
+        <form
+          [formGroup]="restaurantForm"
+          (ngSubmit)="onSubmit()"
+          enctype="multipart/form-data"
+        >
+          <!-- Basic Info -->
+          <div class="form-section">
+            <h5 class="section-title">
+              <span class="section-icon"><i class="bi bi-shop"></i></span>
+              Basic Information
+            </h5>
+
+            <div class="mb-3">
+              <label for="name" class="form-label">Restaurant Name</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-card-heading"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  formControlName="name"
+                  placeholder="Your restaurant name"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                id="description"
+                formControlName="description"
+                rows="4"
+                placeholder="Describe your restaurant (min 10 characters)"
+              ></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="image" class="form-label"
+                >Change Restaurant Image</label
+              >
+              <input
+                type="file"
+                class="form-control"
+                id="image"
+                (change)="onFileSelected($event)"
+              />
+            </div>
+
+            <div *ngIf="existingImageUrl" class="mb-3">
+              <label class="form-label d-block mb-2">Current Image:</label>
+              <img
+                [src]="getRestaurantFullImageUrl(existingImageUrl)"
+                (error)="handleImageError($event)"
+                class="img-fluid rounded shadow-sm"
+                style="max-width: 200px; height: auto"
+                alt="Menu Image"
+              />
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="form-section">
+            <h5 class="section-title">
+              <span class="section-icon"><i class="bi bi-geo-alt"></i></span>
+              Address
+            </h5>
+
+            <div class="mb-3">
+              <label for="street" class="form-label">Street</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-signpost"></i
+                ></span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="street"
+                  formControlName="street"
+                  placeholder="Street"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="city" class="form-label">City</label>
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-building"></i
+                  ></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="city"
+                    formControlName="city"
+                    placeholder="City"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="postalCode" class="form-label">Postal Code</label>
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-mailbox"></i
+                  ></span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="postalCode"
+                    formControlName="postalCode"
+                    placeholder="Postal Code"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Info -->
+          <div class="form-section">
+            <h5 class="section-title">
+              <span class="section-icon"><i class="bi bi-truck"></i></span>
+              Delivery Information
+            </h5>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="preparationTime" class="form-label"
+                  >Preparation Time (minutes)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="preparationTime"
+                  formControlName="preparationTime"
+                  min="1"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="deliveryTime" class="form-label"
+                  >Delivery Time (minutes)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="deliveryTime"
+                  formControlName="deliveryTime"
+                  min="1"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="maxDeliveryRadius" class="form-label"
+                  >Max Delivery Radius (km)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="maxDeliveryRadius"
+                  formControlName="maxDeliveryRadius"
+                  min="0.1"
+                  step="0.1"
+                />
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="maxOrdersPerHour" class="form-label"
+                  >Max Orders Per Hour</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="maxOrdersPerHour"
+                  formControlName="maxOrdersPerHour"
+                  min="1"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Apply Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Create Menu Section -->
+    <div class="form-container">
+      <div class="form-header">
+        <h4 class="mb-0">Create New Menu</h4>
+      </div>
+      <div class="form-body">
+        <div
+          *ngIf="messageMenu"
+          class="alert-message"
+          [ngClass]="{
+            success: messageMenu.includes('success'),
+            error: !messageMenu.includes('success')
+          }"
+        >
+          {{ messageMenu }}
+          <button type="button" class="close-btn" (click)="messageMenu = ''">
+            &times;
+          </button>
+        </div>
+        <form
+          [formGroup]="menuForm"
+          (ngSubmit)="onCreateMenu()"
+          enctype="multipart/form-data"
+        >
+          <div class="form-section">
+            <h5 class="section-title">
+              <span class="section-icon"
+                ><i class="bi bi-menu-button-wide"></i
+              ></span>
+              Menu Information
+            </h5>
+
+            <div class="mb-3">
+              <label for="menuName" class="form-label">Menu Name</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-card-heading"></i
+                ></span>
+                <input
+                  type="text"
+                  id="menuName"
+                  formControlName="name"
+                  class="form-control"
+                  placeholder="Menu name"
+                  minlength="8"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="menuDescription" class="form-label"
+                >Description</label
+              >
+              <textarea
+                id="menuDescription"
+                formControlName="description"
+                rows="4"
+                class="form-control"
+                placeholder="Describe your menu (min 8 characters)"
+                minlength="8"
+              ></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="menuImage" class="form-label">Menu Image</label>
+              <input
+                type="file"
+                id="menuImage"
+                (change)="onFileSelected($event)"
+                class="form-control"
+                accept="image/*"
+              />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Create Menu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="form-container mt-5">
+      <div class="form-header">
+        <h4 class="mb-0">Manage Menus</h4>
+      </div>
+      <div class="form-body table-responsive">
+        <div
+          *ngIf="menuMessage"
+          class="alert-message"
+          [ngClass]="{
+            success: menuMessage.includes('success'),
+            error: !menuMessage.includes('success')
+          }"
+        >
+          {{ menuMessage }}
+          <button type="button" class="close-btn" (click)="menuMessage = ''">
+            &times;
+          </button>
+        </div>
+        <table class="table table-bordered table-hover table-striped">
+          <thead class="table-white">
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let menu of menus">
+              <td>{{ menu.name }}</td>
+              <td>{{ menu.description }}</td>
+              <td>
+                <div class="d-flex flex-wrap gap-2">
+                  <button
+                    class="btn btn-sm btn-danger w-80 w-md-auto"
+                    (click)="onDeleteMenu(menu._id)"
+                  >
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                  <button
+                    class="btn btn-sm btn-warning w-80 w-md-auto"
+                    routerLink="/restaurants/menu/edit/{{ menu._id }}"
+                  >
+                    <i class="bi bi-pencil"></i> Edit
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="menus.length === 0">
+              <td colspan="3" class="text-center text-muted">
+                <i class="bi bi-exclamation-circle me-2"></i>No menus
+                registered.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <div class="form-header">
+        <h4 class="mb-0">Create New Menu Item</h4>
+      </div>
+      <div class="form-body">
+        <div
+          *ngIf="menuItemMessage"
+          class="alert-message"
+          [ngClass]="{
+            success: menuItemMessage.includes('success'),
+            error: !menuItemMessage.includes('success')
+          }"
+        >
+          {{ menuItemMessage }}
+          <button
+            type="button"
+            class="close-btn"
+            (click)="menuItemMessage = ''"
+          >
+            &times;
+          </button>
+        </div>
+
+        <form
+          [formGroup]="menuItemForm"
+          (ngSubmit)="onCreateMenuItem()"
+          enctype="multipart/form-data"
+        >
+          <div class="form-section">
+            <h5 class="section-title">
+              <span class="section-icon"
+                ><i class="bi bi-menu-button-wide"></i
+              ></span>
+              Menu Item Information
+            </h5>
+
+            <div class="mb-3">
+              <label for="itemName" class="form-label">Item Name</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-card-heading"></i
+                ></span>
+                <input
+                  type="text"
+                  id="itemName"
+                  class="form-control"
+                  formControlName="name"
+                  placeholder="Menu item name"
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="itemDescription" class="form-label"
+                >Description</label
+              >
+              <textarea
+                id="itemDescription"
+                class="form-control"
+                formControlName="description"
+                rows="4"
+                placeholder="Describe your menu item (min 8 characters)"
+                minlength="8"
+              ></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="images" class="form-label">Images</label>
+              <input
+                type="file"
+                class="form-control"
+                id="images"
+                (change)="onItemImagesSelected($event)"
+                multiple
+                accept="image/*"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select
+                id="category"
+                class="form-select"
+                formControlName="category"
+              >
+                <option value="">Select a category</option>
+                <option
+                  *ngFor="let category of categories"
+                  [value]="category._id"
+                >
+                  {{ category.name }}
+                </option>
+              </select>
+            </div>
+
+            <h5 class="mt-4">Nutritional Information</h5>
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label class="form-label">Calories</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="calories"
+                  placeholder="150"
+                  min="0"
+                />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Proteins (g)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="proteins"
+                  placeholder="18"
+                  min="0"
+                />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Carbs (g)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="carbs"
+                  placeholder="20"
+                  min="0"
+                />
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Fats (g)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="fats"
+                  placeholder="15"
+                  min="0"
+                />
+              </div>
+            </div>
+
+            <h5 class="mt-4">Portion</h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="portionName" class="form-label">Portion Name</label>
+                <input
+                  type="text"
+                  id="portionName"
+                  class="form-control"
+                  formControlName="portionName"
+                  placeholder="Small, Medium, Large"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="portionPrice" class="form-label"
+                  >Portion Price</label
+                >
+                <input
+                  type="number"
+                  id="portionPrice"
+                  class="form-control"
+                  formControlName="portionPrice"
+                  placeholder="Price"
+                  min="0"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">
+              Create Menu Item
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <div class="form-header">
+        <h4 class="mb-0">Manage Menu Items</h4>
+      </div>
+      <div class="form-body">
+        <div
+          *ngIf="menuItemMessage"
+          class="alert-message"
+          [ngClass]="{
+            success: menuItemMessage.includes('success'),
+            error: !menuItemMessage.includes('success')
+          }"
+        >
+          {{ menuItemMessage }}
+          <button
+            type="button"
+            class="close-btn"
+            (click)="menuItemMessage = ''"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover table-striped">
+            <thead class="table-white">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Category</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of menuItems">
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.category?.name || "N/A" }}</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <button
+                      class="btn btn-sm btn-danger"
+                      (click)="onDeleteMenuItem(item._id)"
+                    >
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                    <button
+                      class="btn btn-sm btn-warning"
+                      [routerLink]="['/restaurants/menuItem/edit', item._id]"
+                    >
+                      <i class="bi bi-pencil"></i> Edit
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="menuItems.length === 0">
+                <td colspan="4" class="text-center">
+                  <i class="bi bi-exclamation-circle me-2"></i> No menu items
+                  found.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <div class="form-header">
+        <h4 class="mb-0">Manage Orders</h4>
+      </div>
+
+      <div class="form-body">
+        <div *ngIf="ordersError" class="alert-message error">
+          {{ ordersError }}
+          <button type="button" class="close-btn" (click)="ordersError = ''">
+            &times;
+          </button>
+        </div>
+
+        <div *ngIf="ordersLoading" class="text-center py-4">
+          <div class="spinner-border" role="status"></div>
+          <p class="mt-2">Loading orders...</p>
+        </div>
+
+        <div
+          class="toast-container position-fixed top-0 start-50 translate-middle-x mt-4"
+          style="z-index: 1055; max-width: 90%"
+          *ngIf="newOrderMessage"
+        >
+          <div
+            class="toast align-items-center text-white bg-success border-0 show"
+            role="alert"
+          >
+            <div class="d-flex">
+              <div class="toast-body">
+                <i class="bi bi-bell-fill me-2"></i>
+                {{ newOrderMessage }}
+              </div>
+              <button
+                type="button"
+                class="btn-close btn-close-white me-2 m-auto"
+                (click)="newOrderMessage = ''"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="table-responsive"
+          *ngIf="!ordersLoading && orders.length > 0"
+        >
+          <table class="table table-bordered table-hover table-striped">
+            <thead class="table-white">
+              <tr>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Type</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders">
+                <td>{{ order.customer?.fullName || "N/A" }}</td>
+                <td>{{ order.customerPhone }}</td>
+                <td>{{ order.deliveryType }}</td>
+                <td>{{ order.paymentMethod }}</td>
+                <td>
+                  <span class="badge bg-secondary">{{ order.status }}</span>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Ver detalhes -->
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      [routerLink]="['/restaurantOrder', order._id]"
+                    >
+                      <i class="bi bi-eye"></i> View
+                    </button>
+                    <!-- Botões de transição de estado -->
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      (click)="updateOrderStatus(order._id, 'confirmed')"
+                      *ngIf="order.status === 'pending'"
+                    >
+                      <i class="bi bi-check2-circle"></i> Confirm Order
+                    </button>
+
+                    <button
+                      class="btn btn-sm btn-outline-warning text-dark"
+                      (click)="updateOrderStatus(order._id, 'inProgress')"
+                      *ngIf="order.status === 'confirmed'"
+                    >
+                      <i class="bi bi-play-circle"></i> Start Preparation
+                    </button>
+
+                    <button
+                      class="btn btn-sm btn-outline-info"
+                      (click)="updateOrderStatus(order._id, 'outForDelivery')"
+                      *ngIf="order.status === 'inProgress'"
+                    >
+                      <i class="bi bi-truck"></i> Delivery
+                    </button>
+
+                    <button
+                      class="btn btn-sm btn-outline-success"
+                      (click)="updateOrderStatus(order._id, 'delivered')"
+                      *ngIf="order.status === 'outForDelivery'"
+                    >
+                      <i class="bi bi-box-seam"></i> Delivered
+                    </button>
+
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="onCancelOrder(order._id)"
+                      *ngIf="!['delivered', 'cancelled'].includes(order.status)"
+                    >
+                      <i class="bi bi-x-circle"></i> Cancel Order
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          *ngIf="!ordersLoading && orders.length === 0"
+          class="text-center text-muted mt-4"
+        >
+          <i class="bi bi-exclamation-circle me-2"></i> No active orders found.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

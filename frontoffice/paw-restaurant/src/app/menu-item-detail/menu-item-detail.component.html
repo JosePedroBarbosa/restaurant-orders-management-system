@@ -1,0 +1,158 @@
+<div class="container mt-4">
+  <div class="item-header">
+    <div class="item-image-showcase">
+      <!-- Imagem principal em destaque -->
+      <div *ngIf="menuItem.menuItem.images?.length > 0" class="main-image">
+        <img 
+          [src]="getMenuItemFullImageUrl(menuItem.menuItem.images[0])"
+          alt="{{ menuItem.menuItem.name }}"
+          (error)="handleImageError($event)"
+        />
+        <div class="item-title-overlay">
+          <h1 class="item-name">{{ menuItem.menuItem.name }}</h1>
+        </div>
+      </div>
+      
+      <div *ngIf="!menuItem.menuItem.images?.length" class="no-image">
+        <div class="item-title-overlay">
+          <h1 class="item-name">{{ menuItem.menuItem.name }}</h1>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="menuItem.menuItem.images?.length > 1" class="thumbnails-container">
+      <div class="thumbnails-scroll">
+        <div *ngFor="let image of menuItem.menuItem.images; let i = index" class="thumbnail" [class.active]="i === 0" (click)="selectImage(i)">
+          <img 
+            [src]="getMenuItemFullImageUrl(image)"
+            alt="{{ menuItem.menuItem.name }} - thumbnail {{ i + 1 }}"
+            (error)="handleImageError($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 pt-4">
+      <div class="item-section">
+        <h2 class="section-title">
+          <i class="bi bi-info-circle-fill info-icon"></i>About this item
+        </h2>
+        <p class="item-description">{{ menuItem.menuItem.description }}</p>
+      </div>
+
+      <div class="item-section">
+        <h2 class="section-title">
+          <i class="bi bi-star info-icon"></i>Nutritional Information
+        </h2>
+        <div class="nutritional-grid">
+          <div class="nutritional-item">
+            <div class="nutritional-label">Calories</div>
+            <div class="nutritional-value">
+              {{ menuItem.menuItem.nutritionalInfo.calories }} kcal
+            </div>
+          </div>
+          <div class="nutritional-item">
+            <div class="nutritional-label">Proteins</div>
+            <div class="nutritional-value">
+              {{ menuItem.menuItem.nutritionalInfo.proteins }}g
+            </div>
+          </div>
+          <div class="nutritional-item">
+            <div class="nutritional-label">Carbohydrates</div>
+            <div class="nutritional-value">
+              {{ menuItem.menuItem.nutritionalInfo.carbs }}g
+            </div>
+          </div>
+          <div class="nutritional-item">
+            <div class="nutritional-label">Fats</div>
+            <div class="nutritional-value">
+              {{ menuItem.menuItem.nutritionalInfo.fats }}g
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-section">
+        <h2 class="section-title">
+          <i class="bi bi-basket info-icon"></i>Portions & Prices
+        </h2>
+        <div *ngIf="menuItem.menuItem.portions?.length > 0; else noPortions">
+          <div
+            *ngFor="let portion of menuItem.menuItem.portions"
+            class="portion-card"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="portion-name">{{ portion.name }}</span>
+              <span class="portion-price"
+                >€ {{ portion.price | number : "1.2-2" }}</span
+              >
+            </div>
+            <div class="mt-3">
+
+              <!-- Customer logado -->
+              <button 
+                *ngIf="isAuthenticated() && isCustomer(); else notAllowed"
+                type="button" 
+                class="btn btn-primary"
+                (click)="addToCart(portion.name, portion.price)">
+                <i class="bi bi-cart-plus me-1"></i> Add to cart
+              </button>
+            
+              <!-- Não autenticado ou não é customer -->
+              <ng-template #notAllowed>
+                <div class="alert alert-warning p-2 mt-2 mb-0">
+                  <i class="bi bi-lock me-1"></i>
+                  <ng-container *ngIf="!isAuthenticated(); else notCustomer">
+                    Please <a routerLink="/auth/login">Login</a> to add items to your cart.
+                  </ng-container>
+                  <ng-template #notCustomer>
+                    Only customers can add items to the cart.
+                  </ng-template>
+                </div>
+              </ng-template>
+            
+            </div>
+          </div>
+        </div>
+        <ng-template #noPortions>
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-circle me-2"></i>No portion information
+            available.
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="col-lg-4 pt-4">
+      <div class="item-sidebar">
+        <div class="mt-4">
+          <h5><i class="bi bi-tag info-icon"></i>Category</h5>
+          <div class="category-badge">
+            {{ menuItem.menuItem.category.name }}
+          </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <div *ngIf="menuItem.menuItem.restaurant">
+          <h5><i class="bi bi-shop info-icon"></i>Restaurant</h5>
+          <a
+            [routerLink]="['/restaurant', menuItem.menuItem.restaurant._id]"
+            class="btn btn-primary mt-2 w-100"
+          >
+            Visit {{ menuItem.menuItem.restaurant.name }}
+          </a>
+        </div>
+
+        <hr class="my-4" />
+
+        <div>
+          <h5><i class="bi bi-clock-history info-icon"></i>Added on</h5>
+          <p>{{ menuItem.menuItem.createdAt | date : "shortDate" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

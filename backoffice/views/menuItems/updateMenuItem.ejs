@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Menu Item - FlavorFlow</title>
+    <link rel="icon" type="image/x-icon" href="/images/icon/icon.png">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+    <style>
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            margin-bottom: 50px;
+        }
+
+        .form-container {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 0;
+            overflow: hidden;
+            margin-bottom: 50px;
+        }
+
+        .form-header {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-body {
+            padding: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            background-color: var(--primary-light);
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(255, 127, 80, 0.25);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-color: #e0e0e0;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(255, 69, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 69, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(108, 117, 125, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+        
+        .help-text {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .image-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .portion-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {            
+            .form-body {
+                padding: 20px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .actions .btn {
+                width: 100%;
+            }
+            
+            .form-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">FlavorFlow</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/api/v1/restaurants/updateRestaurant">
+                            <i class="bi bi-arrow-left-circle me-1"></i> Restaurant Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h4 class="mb-0">Update Menu Item</h4>
+                    </div>
+                    
+                    <div class="form-body">
+                        <form action="/api/v1/menuItems/updateMenuItem/<%= menuItem._id %>" method="POST" enctype="multipart/form-data">  
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <span class="section-icon"><i class="bi bi-card-list"></i></span>
+                                    Basic Informations
+                                </h5>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label for="name" class="form-label">Item Name</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                                            <input type="text" class="form-control" id="name" name="name" required value="<%= menuItem.name %>" placeholder="Item name" />
+                                        </div>
+                                        <div class="help-text">This name will be displayed publicly to customers.</div>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4" required minlength="10" maxlength="255" placeholder="Describe your menu item."><%= menuItem.description %></textarea>
+                                        <div class="help-text">A good description helps to attract more customers!</div>
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <label for="category" class="form-label">Category</label>
+                                        <select class="form-select" id="category" name="category" required>
+                                            <% categories.forEach(function(category) { %>
+                                                <option value="<%= category._id %>" <%= menuItem.category.equals(category._id) ? 'selected' : '' %>>
+                                                    <%= category.name %>
+                                                </option>
+                                            <% }); %>
+                                        </select>
+                                        <div class="help-text">Select the category that best suits this item.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <span class="section-icon"><i class="bi bi-info-circle"></i></span>
+                                    Nutritional Informations
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="calories" class="form-label">Calories (kcal)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="calories" name="calories" value="<%= menuItem.nutritionalInfo.calories %>" required min="0" step="0.1" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="proteins" class="form-label">Proteins (g)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="proteins" name="proteins" value="<%= menuItem.nutritionalInfo.proteins %>" required min="0" step="0.1" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="carbs" class="form-label">Carbs (g)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="carbs" name="carbs" value="<%= menuItem.nutritionalInfo.carbs %>" required min="0" step="0.1" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fats" class="form-label">Fats (g)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="fats" name="fats" value="<%= menuItem.nutritionalInfo.fats %>" required min="0" step="0.1" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <span class="section-icon"><i class="bi bi-images"></i></span>
+                                    Item Images
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label for="images" class="form-label">Add New Images</label>
+                                        <input type="file" class="form-control" id="images" name="images" accept="image/*" multiple>
+                                        <div class="help-text">You can select multiple images (JPG, PNG, or GIF).</div>
+                                    </div>
+                                </div>
+
+                                <% if (menuItem.images && menuItem.images.length > 0) { %>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Images</label>
+                                        <div class="image-preview-container">
+                                            <% menuItem.images.forEach(function(image, index) { %>
+                                                <div class="position-relative">
+                                                    <img src="/<%= image %>" alt="Item Image" class="image-preview">
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="actions">
+                                <a href="/api/v1/menuItems/updateMenuItemPage/<%= menuItem._id %>" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="form-container">
+                        <div class="form-body">
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <span class="section-icon"><i class="bi bi-card-list"></i></span>
+                                    Manage Menu Item Portions
+                                </h5>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% if (menuItem.portions.length > 0) { %>
+                                        <% menuItem.portions.forEach(function(portion) { %>
+                                        <tr>
+                                            <td><%= portion.name %></td>
+                                            <td><%= portion.price %>€</td>
+                                            <td>
+                                            <form action="/api/v1/menuItems/<%= menuItem._id %>/removePortion/<%= portion._id %>" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('You sure you want to delete this portion?')">
+                                                <i class="bi bi-trash me-1"></i> Remove
+                                                </button>
+                                            </form>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                        <td colspan="3" class="empty-message">
+                                            <i class="bi bi-exclamation-circle me-2"></i>
+                                            No portions registered.
+                                        </td>
+                                        </tr>
+                                    <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+                    <div class="form-container">
+                        <div class="form-body">
+                            <form action="/api/v1/menuItems/<%= menuItem._id %>/addPortion" method="POST">  
+                                <div class="form-section">
+                                    <h5 class="section-title">
+                                        <span class="section-icon"><i class="bi bi-card-list"></i></span>
+                                        Add New Portion
+                                    </h5>
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label for="portionName" class="form-label">Portion Name</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-card-heading"></i></span>
+                                                <input type="text" class="form-control" id="portionName" name="portionName" required placeholder="Portion Name" />
+                                            </div>
+                                            <div class="help-text">This name will be displayed publicly to customers.</div>
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label for="portionPrice" class="form-label">Portion Price</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-cash"></i></span>
+                                                <input type="number" class="form-control" id="portionPrice" name="portionPrice" required placeholder="Portion Price" />
+                                            </div>
+                                        </div>
+                                    </div>                          
+                                    <div class="actions">
+                                        <a href="/api/v1/menuItems/updateMenuItemPage/<%= menuItem._id %>" class="btn btn-secondary">Cancel</a>
+                                        <button type="submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

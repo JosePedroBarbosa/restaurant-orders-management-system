@@ -1,0 +1,313 @@
+<div class="container mt-4 mb-5">
+  <div
+    class="toast-container position-fixed top-0 start-50 translate-middle-x mt-4"
+    style="z-index: 1055; max-width: 90%"
+    *ngIf="notificationMessage"
+  >
+    <div
+      class="toast align-items-center text-white bg-success border-0 show"
+      role="alert"
+    >
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          {{ notificationMessage }}
+        </div>
+        <button
+          type="button"
+          class="btn-close btn-close-white me-2 m-auto"
+          (click)="notificationMessage = ''"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
+  <div class="cart-header">
+    <h1 class="cart-title"><i class="bi bi-receipt me-2"></i>Order Details</h1>
+    <p class="cart-subtitle">Track the status and details of your order</p>
+    <div
+      class="alert alert-secondary d-inline-flex align-items-center gap-2 px-3 py-2 mt-2"
+    >
+      <i class="bi bi-upc-scan fs-5"></i>
+      <strong>Order ID:</strong> {{ order.orderCode }}
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Access Denied -->
+  <div
+    *ngIf="!isLoading && accessDenied"
+    class="mt-5 mb-5 pb-5 d-flex justify-content-center"
+  >
+    <div class="card shadow-lg p-4 text-center" style="max-width: 600px">
+      <div class="card-body mb-2">
+        <div class="mb-3">
+          <i
+            class="bi bi-shield-lock-fill text-danger"
+            style="font-size: 3rem"
+          ></i>
+        </div>
+        <h2 class="card-title text-danger mb-3">Access Denied</h2>
+        <p class="card-text mb-4">
+          You are not authorized to view the details of this order.<br />
+          Please make sure you are logged in with the correct account, or return
+          home.
+        </p>
+        <a routerLink="/" class="btn btn-primary me-2 mb-2">
+          <i class="bi bi-house-door-fill me-1"></i> Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Not Found -->
+  <div
+    *ngIf="!isLoading && orderNotFound"
+    class="mt-5 mb-5 pb-5 d-flex justify-content-center"
+  >
+    <div class="card shadow-lg p-4 text-center" style="max-width: 600px">
+      <div class="card-body mb-2">
+        <div class="mb-3">
+          <i
+            class="bi bi-file-earmark-excel-fill text-secondary"
+            style="font-size: 3rem"
+          ></i>
+        </div>
+        <h2 class="card-title text-secondary mb-3">Order Not Found</h2>
+        <p class="card-text mb-4">
+          The order you are looking for does not exist or may have been
+          deleted.<br />
+          Please check the link or return to home page.
+        </p>
+        <a routerLink="/" class="btn btn-primary me-2 mb-5">
+          <i class="bi bi-house-door-fill me-1"></i> Home
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Info -->
+  <div *ngIf="!isLoading && order && !accessDenied">
+    <!-- Status Section -->
+    <div class="order-status mb-4 p-4 bg-light rounded shadow-sm">
+      <h4 class="mb-2">
+        <i class="bi bi-info-circle me-2"></i>Status:
+        <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+          {{ getReadableStatus(order.status) }}
+        </span>
+      </h4>
+      <p class="text-muted mb-0">
+        Placed on: {{ order.createdAt | date : "medium" }}
+      </p>
+    </div>
+
+    <!-- Cancel Option or Message -->
+    <div class="order-actions order-status mb-4 p-4 bg-light rounded shadow-sm">
+      <h5 class="mb-3">
+        <i class="bi bi-x-circle me-2 text-danger"></i>Order Cancellation (Once
+        status is in preparation, you can no longer cancel the order)
+      </h5>
+
+      <!-- Mostrar botão de cancelamento -->
+      <div
+        *ngIf="canShowCancelOption()"
+        class="d-flex justify-content-between align-items-center flex-wrap gap-3"
+      >
+        <div class="text-danger fw-medium">
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <i class="bi bi-clock me-2"></i>
+            You can cancel this order for the next
+            <strong>{{ remainingTime }} seconds</strong>
+          </div>
+        </div>
+
+        <button
+          class="btn btn-outline-danger mt-2 mt-md-0"
+          (click)="cancelOrder()"
+        >
+          <i class="bi bi-x-circle me-1"></i> Cancel Order
+        </button>
+      </div>
+
+      <!-- Janela de cancelamento expirou -->
+      <div *ngIf="wasCancellableButExpired()" class="text-muted">
+        <i class="bi bi-hourglass-split me-2"></i>
+        The cancellation window has expired.
+      </div>
+
+      <!-- Order já foi cancelada -->
+      <div *ngIf="order.status === 'cancelled'" class="text-danger fw-semibold">
+        <i class="bi bi-x-octagon-fill me-2"></i>
+        This order has been cancelled.
+      </div>
+
+      <!-- Order já entrou em preparação ou mais -->
+      <div *ngIf="hasPassedCancellationPhase()" class="text-muted">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        Your order is already being prepared or delivered and can no longer be
+        cancelled.
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left Column -->
+      <div class="col-md-8">
+        <!-- Delivery Info -->
+        <div class="cart-section">
+          <h2 class="section-title">
+            <i class="bi bi-truck me-2"></i>Payment & Delivery Information
+          </h2>
+          <p><strong>Type:</strong> {{ order.deliveryType | titlecase }}</p>
+          <p>
+            <strong>Address:</strong> {{ order.deliveryDetails?.street }},
+            {{ order.deliveryDetails?.city }}
+            {{ order.deliveryDetails?.postalCode }}
+          </p>
+          <p>
+            <strong>Payment Method:</strong>
+            {{ order.paymentMethod | titlecase }}
+          </p>
+          <p>
+            <strong>Payment Status:</strong>
+            {{ order.paymentStatus | titlecase }}
+          </p>
+          <p>
+            <strong>Citizen Card Number:</strong>
+            {{ order.citizenCardNumber }}
+          </p>
+        </div>
+
+        <!-- Ordered Items -->
+        <div class="cart-section">
+          <h2 class="section-title">
+            <i class="bi bi-bag-check me-2"></i>Ordered Items
+          </h2>
+          <div *ngFor="let item of order.orderItems" class="cart-item">
+            <div>
+              <h5 class="mb-1">{{ item.menuItem?.name }}</h5>
+              <p class="text-muted mb-0">Portion: {{ item.portionName }}</p>
+              <p class="mb-0">Quantity: {{ item.quantity }}</p>
+              <p class="mb-0">€ {{ item.portionPrice.toFixed(2) }} each</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-md-4 align-self-start">
+        <div class="cart-summary mb-4">
+          <h2 class="section-title">
+            <i class="bi bi-wallet2 me-2"></i>Order Summary
+          </h2>
+          <div class="summary-total">
+            <span class="total-label">Total Paid</span>
+            <span class="total-value">€ {{ order.totalPrice.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <!-- Mostrar review já feita -->
+        <div
+          *ngIf="shouldShowSubmittedReview()"
+          class="cart-section border-start border-dark border-4 mb-4"
+        >
+          <h4 class="section-title d-flex align-items-center mb-3">
+            <i class="bi bi-check-circle-fill me-2"></i>Submitted Review
+          </h4>
+          <p><strong>Rating:</strong> {{ order.review.rating }}/5.0</p>
+          <p><strong>Comment:</strong> {{ order.review.comment }}</p>
+          <img
+            *ngIf="order.review.photo"
+            [src]="getReviewFullImageUrl(order.review.photo)"
+            (error)="handleImageError($event)"
+            class="img-thumbnail border border-success mt-2"
+            style="max-width: 100%; height: auto"
+          />
+          <p class="text-muted mt-2">
+            <small
+              >Submitted on
+              {{ order.review.createdAt | date : "medium" }}</small
+            >
+          </p>
+        </div>
+
+        <!-- Mostrar formulário de review -->
+        <div *ngIf="shouldShowReviewForm()" class="mt-4">
+          <div class="cart-section border-start border-4 border-dark">
+            <h4 class="section-title d-flex align-items-center mb-4">
+              <i class="bi bi-star-fill me-2"></i>Rate Your Experience
+            </h4>
+
+            <form
+              [formGroup]="reviewForm"
+              (ngSubmit)="submitReview()"
+              enctype="multipart/form-data"
+            >
+              <div class="form-floating mb-3">
+                <input
+                  type="number"
+                  formControlName="rating"
+                  class="form-control"
+                  id="rating"
+                  placeholder="Rating"
+                  min="1.0"
+                  max="5.0"
+                  step="0.1"
+                />
+                <label for="rating">Rating (1.0 to 5.0)</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                <textarea
+                  formControlName="comment"
+                  class="form-control"
+                  placeholder="Leave a comment"
+                  id="comment"
+                  style="height: 100px"
+                ></textarea>
+                <label for="comment">Comment</label>
+              </div>
+
+              <div class="mb-3">
+                <label for="photo" class="form-label fw-semibold"
+                  >Upload a Photo (optional)</label
+                >
+                <input
+                  type="file"
+                  (change)="onReviewImageSelected($event)"
+                  class="form-control"
+                  id="photo"
+                />
+              </div>
+
+              <div *ngIf="imagePreviewUrl" class="mb-3">
+                <label class="form-label d-block mb-2"
+                  >Selected Image Preview:</label
+                >
+                <img
+                  [src]="imagePreviewUrl"
+                  (error)="handleImageError($event)"
+                  class="img-thumbnail border border-warning"
+                  style="max-width: 200px; height: auto"
+                  alt="Selected Image"
+                />
+              </div>
+
+              <button
+                class="btn btn-primary w-100 mt-3 fw-semibold"
+                type="submit"
+              >
+                <i class="bi bi-send-fill me-1"></i>Submit Review
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div class="container my-4">
+  <div class="form-container">
+    <div class="form-header">
+      <h4 class="mb-0">Edit Menu</h4>
+    </div>
+
+    <div class="form-body">
+      <div *ngIf="editMenuMessage" class="alert-message" [ngClass]="{
+        success: editMenuMessage.includes('successfully'),
+        error: !editMenuMessage.includes('successfully')
+      }">
+        {{ editMenuMessage }}
+        <button type="button" class="close-btn" (click)="editMenuMessage = ''">
+          &times;
+        </button>
+      </div>
+
+      <form
+        [formGroup]="menuForm"
+        (ngSubmit)="onSubmit()"
+        enctype="multipart/form-data"
+      >
+        <div class="mb-3">
+          <label class="form-label">Menu Name</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter menu name"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            rows="4"
+            placeholder="Enter description"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Update Image</label>
+          <input
+            type="file"
+            class="form-control"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+
+        <div *ngIf="existingImageUrl" class="mb-3">
+          <label class="form-label d-block mb-2">Current Image:</label>
+          <img
+            [src]="getMenuFullImageUrl(existingImageUrl)"
+            (error)="handleImageError($event)"
+            class="img-fluid rounded shadow-sm"
+            style="max-width: 200px; height: auto;"
+            alt="Menu Image"
+          />
+        </div>
+
+        <div class="actions mt-4">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="form-container mt-5">
+    <div class="form-header">
+      <h4 class="mb-0">Manage Menu Items</h4>
+    </div>
+    <div class="form-body">
+      <div *ngIf="manageItemsMessage" class="alert-message" [ngClass]="{
+        success: manageItemsMessage.includes('successfully'),
+        error: !manageItemsMessage.includes('successfully')
+      }">
+        {{ manageItemsMessage }}
+        <button type="button" class="close-btn" (click)="manageItemsMessage = ''">
+          &times;
+        </button>
+      </div>
+      <table
+        class="table table-bordered table-hover table-striped align-middle"
+      >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of menuItems">
+            <td>{{ item.name }}</td>
+            <td>{{ item.category?.name || "N/A" }}</td>
+            <td>{{ item.description }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="onRemoveItemFromMenu(item._id)"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="menuItems.length === 0">
+            <td colspan="4" class="text-center text-muted">
+              <i class="bi bi-exclamation-circle me-2"></i>No menu items.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="form-container mt-5">
+    <div class="form-header">
+      <h4 class="mb-0">Add Menu Items to Menu</h4>
+    </div>
+    <div class="form-body">
+      <div *ngIf="addItemsMessage" class="alert-message" [ngClass]="{
+        success: addItemsMessage.includes('successfully'),
+        error: !addItemsMessage.includes('successfully')
+      }">
+        {{ addItemsMessage }}
+        <button type="button" class="close-btn" (click)="addItemsMessage = ''">
+          &times;
+        </button>
+      </div>
+        <form (ngSubmit)="onAddItemToMenu(itemToAdd)" class="mt-4">
+            <label for="itemToAdd" class="form-label text-muted">Add Menu Item</label>
+            <select id="itemToAdd" [(ngModel)]="itemToAdd" name="itemToAdd" class="form-select text-muted" required>
+              <option value="" disabled>Select a menu item</option>
+              <ng-container *ngFor="let item of allItems">
+                <option 
+                  *ngIf="!isItemAlreadyInMenu(item._id)" 
+                  [value]="item._id">
+                  {{ item.name }}
+                </option>
+              </ng-container>
+            </select>
+    
+            <div class="mt-3">
+              <button type="submit" class="btn btn-primary mt-5">Add Item</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</div>

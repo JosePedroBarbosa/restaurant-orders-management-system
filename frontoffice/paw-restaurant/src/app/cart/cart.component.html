@@ -1,0 +1,151 @@
+<div class="container mt-4">
+  <div class="cart-header">
+    <h1 class="cart-title"><i class="bi bi-cart3 me-2"></i>Your Cart</h1>
+    <p class="cart-subtitle">Review your selected items before checkout</p>
+  </div>
+
+  <div *ngIf="!isLoading; else loading">
+    <div *ngIf="cartItems.length > 0; else emptyCart">
+      <div class="row">
+        <!-- Cart Items Section -->
+        <div class="col-lg-8">
+          <div class="cart-section">
+            <h2 class="section-title">
+              <i class="bi bi-bag-check me-2"></i>Cart Items
+            </h2>
+
+            <div *ngFor="let item of cartItems" class="cart-item">
+              <img
+                [src]="getMenuItemFullImageUrl(item.menuItem?.images?.[0])"
+                class="item-image me-3"
+                alt="{{ item.menuItem?.name }}"
+                (error)="handleImageError($event)"
+              />
+
+              <div class="cart-item-details flex-grow-1">
+                <h5 class="mb-1">{{ item.menuItem?.name }}</h5>
+                <p class="text-muted mb-0">Portion: {{ item.portionName }}</p>
+                <p class="mb-2">€ {{ item.portionPrice.toFixed(2) }}</p>
+
+                <div
+                  class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mt-3 gap-2"
+                >
+                  <!-- Quantity Controls -->
+                  <div class="quantity-control d-flex align-items-center">
+                    <button
+                      class="quantity-btn decrease-btn"
+                      [disabled]="item.quantity <= 1"
+                      (click)="
+                        updateItemQuantity(
+                          item,
+                          item.portionName,
+                          item.quantity - 1
+                        )
+                      "
+                    >
+                      <i class="bi bi-dash"></i>
+                    </button>
+
+                    <input
+                      type="number"
+                      class="quantity-input mx-2"
+                      [value]="item.quantity"
+                      min="1"
+                      readonly
+                    />
+
+                    <button
+                      *ngIf="item.menuItem"
+                      class="quantity-btn increase-btn"
+                      (click)="
+                        updateItemQuantity(
+                          item,
+                          item.portionName,
+                          item.quantity + 1
+                        )
+                      "
+                    >
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+
+                  <!-- Remove Button -->
+                  <button
+                    class="btn btn-outline-danger-remove"
+                    (click)="removeItem(item.menuItem._id, item.portionName)"
+                    [attr.aria-label]="'Remove ' + item.menuItem?.name"
+                  >
+                    <i class="bi bi-trash-fill me-1"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <button class="btn btn-outline-danger" (click)="clearCart()">
+                <i class="bi bi-trash me-2"></i>Clear Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="col-lg-4 cart-mobile-order">
+          <div class="cart-summary">
+            <h2 class="section-title">
+              <i class="bi bi-receipt me-2"></i>Order Summary
+            </h2>
+
+            <div id="summary-details">
+              <div class="summary-item">
+                <span class="summary-label">
+                  Number of Items (<span id="items-count">{{
+                    cartItems.length
+                  }}</span
+                  >)
+                </span>
+              </div>
+
+              <div class="summary-total">
+                <span class="total-label">Total</span>
+                <span class="total-value" id="total-price"
+                  >€ {{ totalPrice.toFixed(2) }}</span
+                >
+              </div>
+
+              <a
+                [routerLink]="['/checkout']"
+                class="btn btn-primary checkout-btn"
+              >
+                <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #emptyCart>
+    <div class="empty-cart py-5" style="min-height: 60vh">
+      <div class="empty-cart-icon mb-4">
+        <i class="bi bi-cart-x"></i>
+      </div>
+      <h3 class="empty-cart-message mb-4">Your cart is empty</h3>
+      <p class="text-muted mb-4">
+        You haven’t added anything yet. Start exploring our menu!
+      </p>
+      <a [routerLink]="['/']" class="btn btn-primary">
+        <i class="bi bi-shop me-2"></i>Browse Menu
+      </a>
+    </div>
+  </ng-template>
+</div>
