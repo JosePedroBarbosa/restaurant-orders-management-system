@@ -1,120 +1,67 @@
-# ✨ FlavorFlow – Online Ordering Platform for Restaurants ✨
+# FlavorFlow | Restaurant Orders Management System
 
-## Description
+Academic full-stack platform developed to manage restaurant services, allowing interaction between **restaurants**, **customers**, and **administrators** through a centralized system.
 
-FlavorFlow is a web-based application that provides an integrated order management system for restaurants, customers, and administrators. It features user registration, authentication, real-time order tracking, menu management, and customer reviews.
+---
 
-## Technologies
+## 📌 Project Overview
 
-* **Frontend**
+The Restaurant Orders Management System is a service reservation and order management platform designed to support restaurant operations and customer interactions.
 
-  * Angular
-  * Bootstrap
-* **Backend**
+The system allows restaurants to manage menus and orders, customers to browse restaurants and place orders, and administrators to oversee platform activity. The project focuses on efficiency, usability, and real-world software engineering practices.
 
-  * Node.js
-  * Express.js
-  * Socket.IO (WebSockets)
-  * JSON Web Tokens (JWT) for authentication
-  * Swagger (OpenAPI) for API documentation
-* **Database**
+---
 
-  * MongoDB
-* **Development Tools**
+## ✨ Main Features
 
-  * Git & GitHub
-  * Nodemon (automatic reload)
+### 🍽️ Restaurants
+- Manage menus and menu items
+- Track and update order status
+- View customer feedback and ratings
+- Monitor basic performance statistics
 
-## Key Features
+### 👥 Customers
+- Browse restaurants and menus
+- Place and track orders
+- Manage shopping cart
+- Submit reviews and ratings
 
-* **Administrator**
+### 👨‍💼 Administrators
+- Manage users and restaurant accounts
+- Oversee platform activity
+- Maintain food categories
+- Access global statistics and reports
 
-  * Validate and manage restaurant accounts
-  * Manage categories and menu items for any restaurant
-  * Dashboard with charts (registered restaurants, monthly orders)
+---
 
-* **Restaurant Owner**
+## 🛠️ Technologies Used
 
-  * Create and edit restaurant page (details, image, address, delivery radius)
-  * Manage categories, dishes, and portions
-  * Update order status (preparing, shipped, delivered)
+- Node.js
+- Angular
+- MongoDB
+- REST APIs
+- MVC architectural pattern
 
-* **Customer**
+---
 
-  * Search and filter by restaurant, category, location, and price
-  * Shopping cart with item summary and countdown timer
-  * Checkout with selectable payment methods
-  * Real-time order status tracking
-  * Rate and review orders (stars, comments, photos)
+## 🎓 Academic Context
 
-* **General**
+This project was developed as part of a **Software Engineering course** at **ESTG (Escola Superior de Tecnologia e Gestão)**.
 
-  * Secure registration and login pages (route guards)
-  * User profile with order history
-  * Fully documented RESTful API via Swagger
+It applies key concepts such as:
+- Full-stack web development
+- Client–server architecture
+- User role management
+- RESTful service design
+- Software modularity and scalability
 
-## Prerequisites
+---
 
-* Node.js >= 18.x
-* npm >= 9.x or Yarn >= 1.x
-* MongoDB (local or Atlas instance)
+## 🎯 Learning Objectives
 
-## Installation & Startup
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/JosePedroBarbosa/restaurant-management-system.git
-   ```
-
-2. **Create environment variables file** In the project backoffice root, create a `.env` file with the following content:
-
-   ```dotenv
-   NODE_ENV=development
-   MONGODB_URI=YOUR_MONGO_DB_URI
-   JWT_SECRET=yourSecretKey
-   ```
-
-3. **Backend setup**
-
-   ```bash
-   cd backoffice
-   npm install
-   npm start   
-   ```
-
-   The backend server will start at `http://localhost:3000`.
-
-4. **Frontend setup**
-
-   ```bash
-   cd frontoffice/paw-restaurant
-   npm install
-   npm start
-   ```
-
-   Access the Angular application at `http://localhost:4200`.
-
-5. **API Documentation** Open the Swagger UI in your browser:
-
-   ```
-   http://localhost:3000/swagger/
-   ```
-
-## Project Structure
-
-```
-/
-├─ backend/         # Node.js + Express server code
-├─ frontend/        # Angular application
-├─ .gitignore       # Ignored files and folders
-└─ README.md        # Project documentation
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m "Add your feature"`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
+- Design and implementation of a multi-role web platform
+- Application of software architecture patterns
+- Development of scalable backend services
+- Creation of interactive and user-friendly interfaces
+- Integration of databases and APIs
+- Team-based academic software development
